@@ -52,7 +52,7 @@ public class AuthController {
     @PostMapping("/login")
     public JwtResponse login (@RequestBody LoginRequest request){
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(()-> new RuntimeException(("User not found"));// esto enservice
+                .orElseThrow(()-> new RuntimeException(("User not found")));// esto enservice
         if(!passwordEncoder.matches(request.password(), user.getPassword())){
             throw new RuntimeException("Invalid password");
         }

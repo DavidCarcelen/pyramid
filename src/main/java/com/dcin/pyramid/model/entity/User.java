@@ -1,17 +1,16 @@
 package com.dcin.pyramid.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED) // cada hijo en su tabla
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Data
 public abstract class User {
     @Id
     @GeneratedValue
@@ -27,5 +26,6 @@ public abstract class User {
     private String role; // "PLAYER" o "STORE"
 
     private LocalDateTime createdAt = LocalDateTime.now();
+
 }
 

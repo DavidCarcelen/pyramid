@@ -1,12 +1,12 @@
 package com.dcin.pyramid.model.entity;
 
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.GeneratedValue;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Store extends User{
