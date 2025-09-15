@@ -25,5 +25,5 @@ public class Tournament {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Store organizer;
+    private User organizer;
 }

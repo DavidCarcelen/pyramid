@@ -3,8 +3,6 @@ package com.dcin.pyramid.controller;
 import com.dcin.pyramid.model.dto.JwtResponse;
 import com.dcin.pyramid.model.dto.LoginRequest;
 import com.dcin.pyramid.model.dto.SignUpRequest;
-import com.dcin.pyramid.model.entity.Player;
-import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.repository.UserRepository;
 import com.dcin.pyramid.security.JwtProvider;
@@ -27,27 +25,21 @@ public class AuthController {
         this.jwtProvider = jwtProvider;
     }
     @PostMapping("/signup")
-    public String signup(@RequestBody SignUpRequest request){   //FEO FEO
+    public String signup(@RequestBody SignUpRequest request){
+        String message;
         if (userRepository.existsByEmail(request.email())){
-            return "Email already in use";
+            message = "Email already in use";
+        } else {
+            //create user
+            User user = new User();
+            user.setEmail(request.email());
+            user.setPassword(passwordEncoder.encode(request.password()));
+            user.setNickname(request.nickname());
+            user.setRole(request.role());
+            userRepository.save(user);// deberia estar en service?
+            message = "User registered succesfully";
         }
-        if ("PLAYER".equalsIgnoreCase(request.role())){ //limpiar
-            Player player = new Player();
-            player.setEmail(request.email());
-            player.setPassword(passwordEncoder.encode(request.password()));
-            player.setRole("PLAYER");
-            player.setNickname(request.nickname());
-            userRepository.save(player);// esto deberia estar en service
-        } else if ("STORE".equalsIgnoreCase(request.role())){
-            Store store = new Store();
-            store.setEmail(request.email());
-            store.setPassword(passwordEncoder.encode(request.password()));
-            store.setRole("STORE");
-            store.setName(request.storeName());
-            store.setAddress(request.address());
-            userRepository.save(store);
-        }
-        return "User registered succesfully";
+        return message;
     }
     @PostMapping("/login")
     public JwtResponse login (@RequestBody LoginRequest request){

@@ -22,7 +22,7 @@ public class Registration {
     private UUID id;
 
     @ManyToOne
-    private Player player;
+    private User player;
 
     @ManyToOne
     private Tournament tournament;

@@ -20,9 +20,7 @@ public class Following {
     @GeneratedValue
     private UUID id;
     @ManyToOne
-    private Player player;
-    @ManyToOne
-    private Store store;
+    private User user;
 
     private LocalDateTime followedAt = LocalDateTime.now();
 

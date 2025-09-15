@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED) // cada hijo en su tabla
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public abstract class User {
+@Table(name = "_user")
+public class User {
     @Id
     @GeneratedValue
     private UUID id;
@@ -20,10 +20,14 @@ public abstract class User {
     private String email;
 
     @Column(nullable = false)
-    private String password; // hash en el futuro
+    private String password;
 
+    @Column(nullable = false, unique = true)
+    private String nickname;
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String role; // "PLAYER" o "STORE"
+    private Role role;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 

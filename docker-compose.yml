@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: pyramiddb
+      POSTGRES_DB: pyramidDB
     ports:
       - "5432:5432"
     volumes:
