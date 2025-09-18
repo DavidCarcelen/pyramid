@@ -1,5 +1,6 @@
 package com.dcin.pyramid.security;
 
+import com.dcin.pyramid.model.entity.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -29,11 +30,10 @@ public class JwtProvider {
         this.expiration = expiration;
     }*/
 
-
-    public String generateToken (String email, String role){
+    public String generateToken (String email, Role role){
         return Jwts.builder()
                 .setSubject(email)
-                .claim("role", role)
+                .claim("role", role.name()) //claims.put?gpt
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

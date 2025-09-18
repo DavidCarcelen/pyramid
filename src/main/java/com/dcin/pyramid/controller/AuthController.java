@@ -30,7 +30,6 @@ public class AuthController {
         if (userRepository.existsByEmail(request.email())){
             message = "Email already in use";
         } else {
-            //create user
             User user = new User();
             user.setEmail(request.email());
             user.setPassword(passwordEncoder.encode(request.password()));
