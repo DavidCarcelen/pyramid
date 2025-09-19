@@ -36,7 +36,7 @@ public class AuthController {
             user.setNickname(request.nickname());
             user.setRole(request.role());
             userRepository.save(user);// deberia estar en service?
-            message = "User registered succesfully";
+            message = "User registered successfully";
         }
         return message;
     }
