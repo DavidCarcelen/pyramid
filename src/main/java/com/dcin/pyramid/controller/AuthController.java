@@ -6,6 +6,7 @@ import com.dcin.pyramid.model.dto.SignUpRequest;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.repository.UserRepository;
 import com.dcin.pyramid.security.JwtProvider;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,7 +44,7 @@ public class AuthController {
     @PostMapping("/login")
     public JwtResponse login (@RequestBody LoginRequest request){
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(()-> new RuntimeException(("User not found")));// esto enservice
+                .orElseThrow(()-> new UsernameNotFoundException("Email unregistered."));// esto enservice
         if(!passwordEncoder.matches(request.password(), user.getPassword())){
             throw new RuntimeException("Invalid password");
         }

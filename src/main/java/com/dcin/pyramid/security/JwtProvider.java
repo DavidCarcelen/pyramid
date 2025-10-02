@@ -24,12 +24,6 @@ public class JwtProvider {
     @Value("${jwt.expiration}")
     private long expiration;
 
-   /* public JwtProvider( String secret, long expiration){
-        System.out.println(">>> JwtProvider init with secret length: " + secret.length());
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        this.expiration = expiration;
-    }*/
-
     public String generateToken (String email, Role role){
         return Jwts.builder()
                 .setSubject(email)
