@@ -1,6 +1,7 @@
 package com.dcin.pyramid.security;
 
 import com.dcin.pyramid.model.entity.Role;
+import com.dcin.pyramid.model.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -24,10 +25,10 @@ public class JwtProvider {
     @Value("${jwt.expiration}")
     private long expiration;
 
-    public String generateToken (String email, Role role){
+    public String generateToken (User user){
         return Jwts.builder()
-                .setSubject(email)
-                .claim("role", role.name()) //claims.put?gpt
+                .setSubject(user.getEmail())
+                .claim("role", user.getRole().name()) //claims.put?gpt
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
