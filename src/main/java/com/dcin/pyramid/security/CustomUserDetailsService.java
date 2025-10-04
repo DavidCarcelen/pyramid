@@ -1,5 +1,6 @@
 package com.dcin.pyramid.security;
 
+import com.dcin.pyramid.exception.UserNotFoundException;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,8 +16,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.userRepository = userRepository;
     }
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException{
+    public UserDetails loadUserByUsername(String email) throws UserNotFoundException{
         return userRepository.findByEmail(email)
-                .orElseThrow(()-> new UsernameNotFoundException("User not found with email: " + email));
+                .orElseThrow(()-> new UserNotFoundException("User not found with email: " + email));
     }
 }

@@ -1,5 +1,6 @@
 package com.dcin.pyramid.service.impl;
 
+import com.dcin.pyramid.exception.UserAlreadyRegisteredException;
 import com.dcin.pyramid.model.dto.JwtResponse;
 import com.dcin.pyramid.model.dto.LoginRequest;
 import com.dcin.pyramid.model.dto.SignUpRequest;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     @Override
     public JwtResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
@@ -29,6 +33,21 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResponse signup(SignUpRequest request) {
-        return null;
+        if (request.email().isEmpty() || request.password().isEmpty()){
+            throw new IllegalArgumentException("Email and password cannot be null.");
+        }
+        userRepository.findByEmail(request.email())
+                .ifPresent(user -> {
+                    throw new UserAlreadyRegisteredException("Email already registered.");
+                });
+            User user = User.builder()
+                    .email(request.email())
+                    .password(passwordEncoder.encode(request.password()))
+                    .nickname(request.nickname())
+                    .role(request.role())
+                    .build();
+            userRepository.save(user);
+            String token = jwtProvider.generateToken(user);
+        return new JwtResponse(token);
     }
 }
