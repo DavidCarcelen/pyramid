@@ -1,15 +1,16 @@
 package com.dcin.pyramid.service;
 
 import com.dcin.pyramid.model.dto.NewTournamentRequest;
-import com.dcin.pyramid.model.dto.TournamentCreationResponse;
+import com.dcin.pyramid.model.dto.TournamentManagementResponse;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface PyramidService {
-    TournamentCreationResponse createTournament(NewTournamentRequest request, User user);
+    TournamentManagementResponse createTournament(NewTournamentRequest request, User user);
 
-    List<Tournament> getUpcommingTournamentsByOrganizer(User organizer);
+    TournamentManagementResponse getTournamentsByOrganizer(User organizer, LocalDate date, String message);
 
 }

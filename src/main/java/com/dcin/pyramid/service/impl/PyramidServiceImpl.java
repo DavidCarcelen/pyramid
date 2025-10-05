@@ -1,11 +1,12 @@
 package com.dcin.pyramid.service.impl;
 
 import com.dcin.pyramid.model.dto.NewTournamentRequest;
-import com.dcin.pyramid.model.dto.TournamentCreationResponse;
+import com.dcin.pyramid.model.dto.TournamentManagementResponse;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.repository.TournamentRepository;
 import com.dcin.pyramid.service.PyramidService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,12 @@ import java.util.List;
 public class PyramidServiceImpl implements PyramidService {
 
     private final TournamentRepository tournamentRepository;
+    @Transactional
     @Override
-    public TournamentCreationResponse createTournament(NewTournamentRequest request, User user) {
+    public TournamentManagementResponse createTournament(NewTournamentRequest request, User user) {
+        if(request.date().isBefore(LocalDate.now())){
+            throw new IllegalArgumentException("Tournament date cannot be in the past.");
+        }
         Tournament tournament = Tournament.builder()
                 .tournamentName(request.tournamentName())
                 .date(request.date())
@@ -26,13 +31,14 @@ public class PyramidServiceImpl implements PyramidService {
                 .price(request.price())
                 .organizer(user)
                 .build();
-        String message = "Tournament successfully created!";
-        List<Tournament> storeTournaments = getUpcommingTournamentsByOrganizer(user);
-        return new TournamentCreationResponse(message,storeTournaments);
+        tournamentRepository.save(tournament);
+        String message = "Tournament successfully created!, this are your next tournaments: ";
+        return getTournamentsByOrganizer(user, LocalDate.now(), message);
     }
 
     @Override
-    public List<Tournament> getUpcommingTournamentsByOrganizer(User organizer) {
-        return tournamentRepository.findByOrganizerAndDateAfter(organizer, LocalDate.now());
+    public TournamentManagementResponse getTournamentsByOrganizer(User organizer, LocalDate date, String message) {
+        List<Tournament> tournaments = tournamentRepository.findByOrganizerAndDateAfter(organizer, date);
+        return new TournamentManagementResponse(message, tournaments);
     }
 }
