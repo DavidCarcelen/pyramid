@@ -1,13 +1,16 @@
 package com.dcin.pyramid.service.impl;
 
+import com.dcin.pyramid.exception.UserNotFoundException;
 import com.dcin.pyramid.model.dto.NewTournamentRequest;
 import com.dcin.pyramid.model.dto.TournamentManagementResponse;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.repository.TournamentRepository;
+import com.dcin.pyramid.repository.UserRepository;
 import com.dcin.pyramid.service.PyramidService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,6 +20,7 @@ import java.util.List;
 public class PyramidServiceImpl implements PyramidService {
 
     private final TournamentRepository tournamentRepository;
+    private final UserRepository userRepository;
     @Transactional
     @Override
     public TournamentManagementResponse createTournament(NewTournamentRequest request, User user) {
@@ -41,4 +45,15 @@ public class PyramidServiceImpl implements PyramidService {
         List<Tournament> tournaments = tournamentRepository.findByOrganizerAndDateAfter(organizer, date);
         return new TournamentManagementResponse(message, tournaments);
     }
+    @Override
+    public User checkUserName(String name){
+        return userRepository.findByNickname(name).orElseThrow(()-> new UsernameNotFoundException("No user found with the given name."));
+    }
+
+    @Override
+    public TournamentManagementResponse getAllUpcomingTournaments() {
+        List<Tournament> tournaments = tournamentRepository.findAllAndDateAfter(LocalDate.now());
+        return new TournamentManagementResponse("Upcoming Tournaments: ", tournaments);
+    }
+
 }

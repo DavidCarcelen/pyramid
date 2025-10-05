@@ -24,12 +24,12 @@ public class PyramidController {
                                                                          @AuthenticationPrincipal User user){
         if (user.getRole() != Role.STORE){
             throw new AccessDeniedException("Only Stores can create tournaments!");
-        }
+        }//modify to checkrole?? here or send to service??
 
         return ResponseEntity.ok(pyramidService.createTournament(request, user));
     }
 
-    @GetMapping("tournaments")
+    @GetMapping("/tournaments")
     public ResponseEntity<TournamentManagementResponse> getMyTournaments(@AuthenticationPrincipal User user){
         if (user.getRole() != Role.STORE){
             throw new AccessDeniedException("Only Stores have tournaments!");
@@ -37,7 +37,16 @@ public class PyramidController {
         return ResponseEntity.ok(pyramidService.getTournamentsByOrganizer(user, LocalDate.of(2025,1,1), "Your Tournaments!:"));
     }
 
+    @GetMapping("/upcomingTournaments")
+    public ResponseEntity<TournamentManagementResponse> getUpcomingTournamentsByStore(@RequestBody String store){//better DTO? make flexible different stores or favourites
+        TournamentManagementResponse response;
+        if (store.isEmpty()){
+            response = pyramidService.getAllUpcomingTournaments();
+        } else {
+            User user = pyramidService.checkUserName(store);
+            response = pyramidService.getTournamentsByOrganizer(user, LocalDate.now(), user.getNickname() + " next tournaments:");
+        }
+        return ResponseEntity.ok(response);
+    }
 
-    //upcommingtournaments(store or not)
-    //upcommingmy favouritestores
 }

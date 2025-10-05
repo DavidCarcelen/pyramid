@@ -12,5 +12,8 @@ public interface PyramidService {
     TournamentManagementResponse createTournament(NewTournamentRequest request, User user);
 
     TournamentManagementResponse getTournamentsByOrganizer(User organizer, LocalDate date, String message);
+    User checkUserName(String name);
+
+    TournamentManagementResponse getAllUpcomingTournaments();
 
 }
