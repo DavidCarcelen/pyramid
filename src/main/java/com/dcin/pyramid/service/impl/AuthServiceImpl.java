@@ -33,8 +33,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResponse signup(SignUpRequest request) {
-        if (request.email().isEmpty() || request.password().isEmpty()){
-            throw new IllegalArgumentException("Email and password cannot be null.");
+        if (request.email().isEmpty() || request.password().isEmpty() || request.nickname().isEmpty() || (request.role() == null)){
+            throw new IllegalArgumentException("Fields can't be empty.");
         }
         userRepository.findByEmail(request.email())
                 .ifPresent(user -> {
