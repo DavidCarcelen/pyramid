@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -22,11 +23,16 @@ public class Tournament {
     private UUID id;
     @Column(nullable = false)
     private String tournamentName;
-    private LocalDate date;
+    @Column(nullable = false)
+    private LocalDateTime startDateTime;
     private int maxPlayers;
     private String format;
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal prizeMoney;
+    private boolean open;
+
 
     @ManyToOne
     @JoinColumn(nullable = false)

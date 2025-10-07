@@ -1,6 +1,6 @@
 package com.dcin.pyramid.controller;
 
-import com.dcin.pyramid.model.dto.NewTournamentRequest;
+import com.dcin.pyramid.model.dto.TournamentRequest;
 import com.dcin.pyramid.model.dto.TournamentResponse;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.service.TournamentService;
@@ -18,7 +18,7 @@ public class TournamentController {
     private final TournamentService tournamentService;
 
     @PostMapping("/new")
-    public ResponseEntity<TournamentResponse> createTournament(@RequestBody NewTournamentRequest request,
+    public ResponseEntity<TournamentResponse> createTournament(@RequestBody TournamentRequest request,
                                                                @AuthenticationPrincipal User user){
         //userService.checkUserRole(user, Role.STORE);
         return ResponseEntity.ok(tournamentService.createTournament(request, user));
