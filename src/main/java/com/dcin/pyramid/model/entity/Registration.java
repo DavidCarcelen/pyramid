@@ -1,10 +1,8 @@
 package com.dcin.pyramid.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,17 +14,32 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"player_id", "tournament_id"})
+        }
+)
 public class Registration {
     @Id
     @GeneratedValue
     private UUID id;
 
     @ManyToOne
+    @JoinColumn(nullable = false)
     private User player;
 
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Tournament tournament;
 
-    private boolean active = true;
-    private LocalDateTime registeredAt = LocalDateTime.now();
+    private boolean paid = false;
+    private LocalDateTime registeredAt;
+
+    @PrePersist
+    public void prePersist() {
+        if (registeredAt == null) {
+            registeredAt = LocalDateTime.now();
+        }
+    }
 }

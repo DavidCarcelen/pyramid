@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -32,8 +33,8 @@ public class Tournament {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal prizeMoney;
     private boolean open;
-
-
+    @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
+    private List<Registration> registrations;
     @ManyToOne
     @JoinColumn(nullable = false)
     private User organizer;
