@@ -1,6 +1,7 @@
 package com.dcin.pyramid.controller;
 
 import com.dcin.pyramid.model.dto.GeneralResponse;
+import com.dcin.pyramid.model.dto.RegistrationsResponse;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.service.RegistrationService;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,4 +29,10 @@ public class RegistrationController {
                                                               @PathVariable UUID tournamentId){
         return ResponseEntity.ok(registrationService.deleteRegistration(player,tournamentId));
     }
+
+    @GetMapping("/tournamentId}")
+    public ResponseEntity<RegistrationsResponse> getRegistrationsForOneTournament(@PathVariable UUID tournamentId){
+        return ResponseEntity.ok(registrationService.getRegistrations(tournamentId));
+    }
+
 }

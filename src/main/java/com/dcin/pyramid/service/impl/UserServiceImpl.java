@@ -1,11 +1,13 @@
 package com.dcin.pyramid.service.impl;
 
+import com.dcin.pyramid.exception.UserAlreadyRegisteredException;
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.SignUpRequest;
 import com.dcin.pyramid.model.entity.Role;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.repository.UserRepository;
 import com.dcin.pyramid.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,29 +32,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User checkUserName(String name){
-        return userRepository.findByNickname(name).orElseThrow(()-> new UsernameNotFoundException("No user found with the given name."));
-    }
-
-    @Override
     public void checkId(UUID id) {
-        if(!userRepository.existsById(id)){
+        if (!userRepository.existsById(id)) {
             throw new UsernameNotFoundException("No user found with that id");
         }
 
     }
 
+    @Transactional
     @Override
     public GeneralResponse updateUser(User user, SignUpRequest request) {
-        if (request.email().isEmpty() || request.password().isEmpty() || request.nickname().isEmpty() || (request.role() == null)){
-            throw new IllegalArgumentException("Fields can't be empty.");
-        }
         User userToUpdate = userRepository.findById(user.getId())
-                .orElseThrow(() -> new UsernameNotFoundException("ID not valid."));
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid user ID."));
+        if (!request.nickname().equals(userToUpdate.getNickname()) && userRepository.existsByNickname(request.nickname())) {
+            throw new UserAlreadyRegisteredException("Nickname not available.");
+        }
         userToUpdate.setNickname(request.nickname());
         userToUpdate.setPassword(passwordEncoder.encode(request.password()));
         userToUpdate.setRole(request.role());
         userToUpdate.setEmail(request.email());
+        userRepository.save(userToUpdate);
         return new GeneralResponse("User updated!");
     }
 

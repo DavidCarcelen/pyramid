@@ -1,17 +1,17 @@
 package com.dcin.pyramid.service.impl;
 
 import com.dcin.pyramid.model.dto.GeneralResponse;
-import com.dcin.pyramid.model.dto.TournamentResponse;
+import com.dcin.pyramid.model.dto.RegistrationsResponse;
 import com.dcin.pyramid.model.entity.Registration;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.repository.RegistrationRepository;
 import com.dcin.pyramid.repository.TournamentRepository;
 import com.dcin.pyramid.service.RegistrationService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -43,6 +43,13 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .orElseThrow(()-> new IllegalArgumentException("Player not registered for this tournament!"));
             registrationRepository.delete(registration);
         return new GeneralResponse("Registration deleted.");
+    }
+
+    @Override
+    public RegistrationsResponse getRegistrations(UUID tournamentId) {
+        List<String> players = registrationRepository.findPlayerNicknamesByTournamentId(tournamentId);
+        int totalPlayers = registrationRepository.countPlayersByTournamentId(tournamentId);
+        return new RegistrationsResponse(players, totalPlayers);
     }
 
     public Tournament getTournamentById (UUID tournamentId){

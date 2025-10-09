@@ -4,6 +4,7 @@ import com.dcin.pyramid.model.dto.JwtResponse;
 import com.dcin.pyramid.model.dto.LoginRequest;
 import com.dcin.pyramid.model.dto.SignUpRequest;
 import com.dcin.pyramid.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,12 +19,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<JwtResponse> signup (@RequestBody SignUpRequest request){
+    public ResponseEntity<JwtResponse> signup (@Valid @RequestBody SignUpRequest request){
         return ResponseEntity.ok(authService.signup(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login (@RequestBody LoginRequest request){
+    public ResponseEntity<JwtResponse> login (@Valid @RequestBody LoginRequest request){
         return ResponseEntity.ok(authService.login(request));
     }
 }

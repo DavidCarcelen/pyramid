@@ -33,12 +33,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResponse signup(SignUpRequest request) {
-        if (request.email().isEmpty() || request.password().isEmpty() || request.nickname().isEmpty() || (request.role() == null)){
-            throw new IllegalArgumentException("Fields can't be empty.");
-        }
         userRepository.findByEmail(request.email())
                 .ifPresent(user -> {
                     throw new UserAlreadyRegisteredException("Email already registered.");
+                });
+        userRepository.findByNickname(request.nickname())
+                .ifPresent(user -> {
+                    throw new UserAlreadyRegisteredException("Nickname not available.");
                 });
             User user = User.builder()
                     .email(request.email())

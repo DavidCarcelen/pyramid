@@ -1,7 +1,9 @@
 package com.dcin.pyramid.service.impl;
 
+import com.dcin.pyramid.model.dto.GeneralResponse;
+import com.dcin.pyramid.model.dto.SingleTournamentResponse;
 import com.dcin.pyramid.model.dto.TournamentRequest;
-import com.dcin.pyramid.model.dto.TournamentResponse;
+import com.dcin.pyramid.model.dto.TournamentsResponse;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.repository.TournamentRepository;
@@ -25,23 +27,22 @@ public class TournamentServiceImpl implements TournamentService {
 
     @Transactional
     @Override
-    public TournamentResponse createTournament(TournamentRequest request, User user) {
-        tournamentDateChecker(request.startDateTime());
+    public SingleTournamentResponse createTournament(TournamentRequest request, User organizer) {
         Tournament tournament = Tournament.builder()
                 .tournamentName(request.tournamentName())
                 .startDateTime(request.startDateTime())
                 .maxPlayers(request.maxPlayers())
                 .format(request.format())
                 .price(request.price())
-                .organizer(user)
+                .organizer(organizer)
                 .open(request.open())
                 .build();
         tournamentRepository.save(tournament);
-        return getUpcomingTournamentsByStore(user.getId());
+        return new SingleTournamentResponse("Tournament created!", tournament);
     }
 
     @Override
-    public TournamentResponse getUpcomingTournamentsByStore(UUID storeId) {
+    public TournamentsResponse getUpcomingTournamentsByStore(UUID storeId) {
         List<Tournament> tournaments;
         if (storeId != null) {
             userService.checkId(storeId);
@@ -49,25 +50,41 @@ public class TournamentServiceImpl implements TournamentService {
         } else {
             tournaments = tournamentRepository.findAllByStartDateTimeAfter(LocalDateTime.now());
         }
-        return new TournamentResponse("Upcoming tournaments: ", tournaments);
+        return new TournamentsResponse("Upcoming tournaments: ", tournaments);
     }
 
-    @Override
-    public void tournamentDateChecker(LocalDateTime date) {
-        if (date.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Tournament date cannot be in the past.");
+
+    public void tournamentIdChecker(UUID tournamentId) {
+        if (!tournamentRepository.existsById(tournamentId)) {
+            throw new IllegalArgumentException("Tournament not found");
         }
     }
 
     @Override
-    public TournamentResponse updateTournament(TournamentRequest request, User user) {///check how to get tournament and check user to organizer
-        tournamentDateChecker(request.startDateTime());
-        return null;
+    public SingleTournamentResponse updateTournament(TournamentRequest request, User user, UUID tournamentId) {
+        Tournament tournamentToUpdate = tournamentRepository.findById(tournamentId)
+                .orElseThrow(()-> new IllegalArgumentException("Tournament not found"));
+        tournamentToUpdate.setTournamentName(request.tournamentName());
+        tournamentToUpdate.setStartDateTime(request.startDateTime());
+        tournamentToUpdate.setMaxPlayers(request.maxPlayers());
+        tournamentToUpdate.setFormat(request.format());
+        tournamentToUpdate.setPrice(request.price());
+        tournamentToUpdate.setOpen(request.open());
+        tournamentRepository.save(tournamentToUpdate);
+
+        return new SingleTournamentResponse("Tournament updated", tournamentToUpdate );
     }
 
     @Override
-    public TournamentResponse deleteTournament(User user) {
-        return null;
+    public GeneralResponse deleteTournament(User user, UUID tournamentId) {
+        Tournament tournamentToDelete = tournamentRepository.findById(tournamentId)
+                .orElseThrow(()-> new IllegalArgumentException("tournament not found"));
+        tournamentRepository.delete(tournamentToDelete);
+        return new GeneralResponse("Tournament deleted");
+    }
+    @Override
+    public TournamentsResponse getAllTournaments(UUID userId){
+        return new TournamentsResponse("Tournaments history: ", tournamentRepository.findByOrganizerId(userId));
     }
 
 
