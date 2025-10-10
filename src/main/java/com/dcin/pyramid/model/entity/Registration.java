@@ -33,8 +33,9 @@ public class Registration {
     @JoinColumn(nullable = false)
     private Tournament tournament;
 
-    private boolean paid = false;
+    private boolean paid;
     private LocalDateTime registeredAt;
+    private boolean reserveList;
 
     @PrePersist
     public void prePersist() {

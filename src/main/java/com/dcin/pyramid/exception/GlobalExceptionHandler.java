@@ -46,4 +46,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
         return new ResponseEntity<ErrorMessage>(message, HttpStatus.UNAUTHORIZED);
     }
+    @ExceptionHandler(FullTournamentException.class)
+    public ResponseEntity<ErrorMessage> fullTournamentException(FullTournamentException exception, WebRequest request){
+        ErrorMessage message = new ErrorMessage(
+                HttpStatus.CONFLICT.value(),
+                new Date(),
+                exception.getMessage(),
+                request.getDescription(false)
+
+        );
+        return new ResponseEntity<ErrorMessage>(message, HttpStatus.CONFLICT);
+    }
 }

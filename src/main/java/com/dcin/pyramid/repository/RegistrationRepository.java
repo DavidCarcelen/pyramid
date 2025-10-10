@@ -17,11 +17,12 @@ public interface RegistrationRepository extends JpaRepository<Registration, UUID
     List<Registration> findByTournamentId(UUID tournamentId);
     long countByTournamentIdAndActiveTrue(UUID tournamentId);
     boolean existsByPlayerIdAndTournamentId(UUID playerId, UUID tournamentId);
-    @Query("SELECT r.player.nickname FROM Registration r WHERE r.tournament.id = :tournamentId")
-    List<String> findPlayerNicknamesByTournamentId(UUID tournamentId);
+    @Query("SELECT r.player.nickname FROM Registration r WHERE r.tournament.id = :tournamentId AND r.reserveList = :isReserveList")
+    List<String> findPlayerNicknamesByTournamentIdAndReserveList(UUID tournamentId, boolean isReserveList);
 
-    @Query("SELECT COUNT(r) FROM Registration r WHERE r.tournament.id = :tournamentId")
-    int countPlayersByTournamentId(UUID tournamentId);
+    @Query("SELECT COUNT(r) FROM Registration r WHERE r.tournament.id = :tournamentId AND r.reserveList = :isReserveList")
+    int countPlayersByTournamentIdAndReserveList(UUID tournamentId, boolean isReserveList);
+
 
 
 }

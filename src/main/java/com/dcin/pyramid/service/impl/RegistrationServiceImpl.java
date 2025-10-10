@@ -1,5 +1,6 @@
 package com.dcin.pyramid.service.impl;
 
+import com.dcin.pyramid.exception.FullTournamentException;
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.RegistrationsResponse;
 import com.dcin.pyramid.model.entity.Registration;
@@ -19,41 +20,65 @@ import java.util.UUID;
 public class RegistrationServiceImpl implements RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final TournamentRepository tournamentRepository;
+
     @Override
-    public void checkRegistration(UUID playerId, UUID tournamentId) {
-        if(registrationRepository.existsByPlayerIdAndTournamentId(playerId, tournamentId)){
+    public RegistrationsResponse checkRegistrationAvailability(User player, UUID tournamentId) {
+        if (registrationRepository.existsByPlayerIdAndTournamentId(player.getId(), tournamentId)) {
             throw new IllegalArgumentException("Player already registered for this tournament!");
         }
+        Tournament tournament = getTournamentById(tournamentId);
+        RegistrationsResponse response = getRegistrations(tournamentId);
+        int available = (tournament.getMaxPlayers() - response.totalPlayers());
+        return available > 0 ? newRegistration(player, tournamentId) : newReserveListRegistration(player, tournamentId);
     }
 
     @Override
-    public GeneralResponse newRegistration(User player, UUID tournamentId) {
-        checkRegistration(player.getId(), tournamentId);
+    public RegistrationsResponse newRegistration(User player, UUID tournamentId) {
         Registration registration = Registration.builder()
                 .player(player)
                 .tournament(getTournamentById(tournamentId))
                 .build();
         registrationRepository.save(registration);
-        return new GeneralResponse("Registered to tournament: " + registration.getTournament().getTournamentName());
+        return getRegistrations(tournamentId);
+    }
+
+    @Override
+    public RegistrationsResponse newReserveListRegistration(User player, UUID tournamentId) {
+        Registration registration = Registration.builder()
+                .player(player)
+                .tournament(getTournamentById(tournamentId))
+                .reserveList(true)
+                .build();
+        registrationRepository.save(registration);
+        return getReserveRegistrations(tournamentId);
     }
 
     @Override
     public GeneralResponse deleteRegistration(User player, UUID tournamentId) {
         Registration registration = registrationRepository.findByPlayerIdAndTournamentId(player.getId(), tournamentId)
-                .orElseThrow(()-> new IllegalArgumentException("Player not registered for this tournament!"));
-            registrationRepository.delete(registration);
+                .orElseThrow(() -> new IllegalArgumentException("Player not registered for this tournament!"));
+        registrationRepository.delete(registration);
+        //move player from reserve
         return new GeneralResponse("Registration deleted.");
     }
 
     @Override
     public RegistrationsResponse getRegistrations(UUID tournamentId) {
-        List<String> players = registrationRepository.findPlayerNicknamesByTournamentId(tournamentId);
-        int totalPlayers = registrationRepository.countPlayersByTournamentId(tournamentId);
-        return new RegistrationsResponse(players, totalPlayers);
+        List<String> players = registrationRepository.findPlayerNicknamesByTournamentIdAndReserveList(tournamentId, false);
+        int totalPlayers = registrationRepository.countPlayersByTournamentIdAndReserveList(tournamentId, false);
+        return new RegistrationsResponse("Players list:", players, totalPlayers);
+    }
+    @Override
+    public RegistrationsResponse getReserveRegistrations(UUID tournamentId) {
+        List<String> players = registrationRepository.findPlayerNicknamesByTournamentIdAndReserveList(tournamentId, true);
+        int totalPlayers = registrationRepository.countPlayersByTournamentIdAndReserveList(tournamentId, true);
+        return new RegistrationsResponse("Players in RESERVE list:", players, totalPlayers);
     }
 
-    public Tournament getTournamentById (UUID tournamentId){
-        return  tournamentRepository.findById(tournamentId)
-                .orElseThrow(()->new IllegalArgumentException("tournament not found." ));
+    public Tournament getTournamentById(UUID tournamentId) {
+        return tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new IllegalArgumentException("tournament not found."));
     }
+
+
 }

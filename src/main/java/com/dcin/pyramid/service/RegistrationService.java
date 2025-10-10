@@ -9,8 +9,11 @@ import com.dcin.pyramid.model.entity.User;
 import java.util.UUID;
 
 public interface RegistrationService {
-    void checkRegistration(UUID playerId, UUID tournamentId);
-    GeneralResponse newRegistration(User player, UUID tournamentId);
+    RegistrationsResponse checkRegistrationAvailability(User player, UUID tournamentId);
+    RegistrationsResponse newRegistration(User player, UUID tournamentId);
+    RegistrationsResponse newReserveListRegistration(User player, UUID tournamentId);
     GeneralResponse deleteRegistration(User player, UUID tournamentId);
     RegistrationsResponse getRegistrations(UUID tournamentId);
+    RegistrationsResponse getReserveRegistrations(UUID tournamentId);
+
 }

@@ -20,33 +20,34 @@ import java.util.UUID;
 public class TournamentController {
     private final TournamentService tournamentService;
 
-    @PostMapping("/new")
+    @PostMapping("/store/new")
     public ResponseEntity<SingleTournamentResponse> createTournament(@Valid @RequestBody TournamentRequest request,
-                                                               @AuthenticationPrincipal User user){
+                                                                     @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(tournamentService.createTournament(request, user));
     }
 
-    @GetMapping("/myTournaments")
-    public ResponseEntity<TournamentsResponse> getAllMyTournaments(@AuthenticationPrincipal User user){
+    @GetMapping("/store/myTournaments")
+    public ResponseEntity<TournamentsResponse> getAllMyTournaments(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(tournamentService.getAllTournaments(user.getId()));
     }
 
-    @GetMapping("/upcomingTournaments")
-    public ResponseEntity<TournamentsResponse> getUpcomingTournamentsByStore(@RequestParam(required = false) UUID storeId){
-
-        return ResponseEntity.ok(tournamentService.getUpcomingTournamentsByStore(storeId));
-    }
-
-    @PostMapping("/update")
-    public ResponseEntity<SingleTournamentResponse>updateTournament(@AuthenticationPrincipal User user,
-                                                                    @Valid @RequestBody TournamentRequest tournamentRequest,
-                                                                    @RequestParam(required = true) UUID tournamentId){
+    @PostMapping("/store/update")
+    public ResponseEntity<SingleTournamentResponse> updateTournament(@AuthenticationPrincipal User user,
+                                                                     @Valid @RequestBody TournamentRequest tournamentRequest,
+                                                                     @RequestParam(required = true) UUID tournamentId) {
         return ResponseEntity.ok(tournamentService.updateTournament(tournamentRequest, user, tournamentId));
     }
-    @DeleteMapping("/{tournamentId}")
-    public ResponseEntity<GeneralResponse>deleteTournament(@AuthenticationPrincipal User user,
-                                                           @PathVariable UUID tournamentId){
-        return ResponseEntity.ok(tournamentService.deleteTournament(user,tournamentId));
+
+    @DeleteMapping("/store/{tournamentId}")
+    public ResponseEntity<GeneralResponse> deleteTournament(@AuthenticationPrincipal User user,
+                                                            @PathVariable UUID tournamentId) {
+        return ResponseEntity.ok(tournamentService.deleteTournament(user, tournamentId));
+    }
+
+    @GetMapping("/upcomingTournaments")
+    public ResponseEntity<TournamentsResponse> getUpcomingTournamentsByStore(@RequestParam(required = false) UUID storeId) {
+
+        return ResponseEntity.ok(tournamentService.getUpcomingTournamentsByStore(storeId));
     }
 
 }

@@ -20,9 +20,9 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping("/{tournamentId}")
-    public ResponseEntity<GeneralResponse> newRegistration(@AuthenticationPrincipal User player,
+    public ResponseEntity<RegistrationsResponse> newRegistration(@AuthenticationPrincipal User player,
                                                            @PathVariable UUID tournamentId){
-        return ResponseEntity.ok(registrationService.newRegistration(player,tournamentId));
+        return ResponseEntity.ok(registrationService.checkRegistrationAvailability(player,tournamentId));
     }
     @DeleteMapping("/{tournamentId}")
     public ResponseEntity<GeneralResponse> deleteRegistration(@AuthenticationPrincipal User player,
@@ -30,8 +30,8 @@ public class RegistrationController {
         return ResponseEntity.ok(registrationService.deleteRegistration(player,tournamentId));
     }
 
-    @GetMapping("/tournamentId}")
-    public ResponseEntity<RegistrationsResponse> getRegistrationsForOneTournament(@PathVariable UUID tournamentId){
+    @GetMapping("/{tournamentId}")
+    public ResponseEntity<RegistrationsResponse> getPlayersForOneTournament(@PathVariable UUID tournamentId){
         return ResponseEntity.ok(registrationService.getRegistrations(tournamentId));
     }
 
