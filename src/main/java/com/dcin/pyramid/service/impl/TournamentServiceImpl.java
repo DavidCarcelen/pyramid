@@ -13,6 +13,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -85,6 +87,20 @@ public class TournamentServiceImpl implements TournamentService {
     @Override
     public TournamentsResponse getAllTournaments(UUID userId){
         return new TournamentsResponse("Tournaments history: ", tournamentRepository.findByOrganizerId(userId));
+    }
+
+    public Tournament getTournamentById(UUID tournamentId) {
+        return tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new IllegalArgumentException("tournament not found."));
+    }
+
+    public void updatePrizeMoneyAndSpotsAvailble(UUID tournamentid, int totalPlayers){
+        Tournament tournament = getTournamentById(tournamentid);
+        tournament.setPrizeMoney(tournament.getPrice().multiply(new BigDecimal(totalPlayers)));
+        if (tournament.getMaxPlayers() == totalPlayers){
+            tournament.setFull(true);
+        }
+        tournamentRepository.save(tournament);
     }
 
 

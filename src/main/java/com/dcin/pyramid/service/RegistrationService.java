@@ -10,8 +10,8 @@ import java.util.UUID;
 
 public interface RegistrationService {
     RegistrationsResponse checkRegistrationAvailability(User player, UUID tournamentId);
-    RegistrationsResponse newRegistration(User player, UUID tournamentId);
-    RegistrationsResponse newReserveListRegistration(User player, UUID tournamentId);
+    RegistrationsResponse newRegistration(User player, Tournament tournament);
+    RegistrationsResponse newReserveListRegistration(User player, Tournament tournament);
     GeneralResponse deleteRegistration(User player, UUID tournamentId);
     RegistrationsResponse getRegistrations(UUID tournamentId);
     RegistrationsResponse getReserveRegistrations(UUID tournamentId);

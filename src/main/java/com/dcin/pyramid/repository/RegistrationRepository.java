@@ -23,6 +23,9 @@ public interface RegistrationRepository extends JpaRepository<Registration, UUID
     @Query("SELECT COUNT(r) FROM Registration r WHERE r.tournament.id = :tournamentId AND r.reserveList = :isReserveList")
     int countPlayersByTournamentIdAndReserveList(UUID tournamentId, boolean isReserveList);
 
+    Optional<Registration> findFirstByTournamentIdAndReserveListTrueOrderByRegisteredAtAsc(UUID tournamentId);
+
+
 
 
 }

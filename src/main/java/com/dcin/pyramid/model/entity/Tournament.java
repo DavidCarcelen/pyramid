@@ -33,6 +33,7 @@ public class Tournament {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal prizeMoney;
     private boolean open;
+    private boolean full;
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
     private List<Registration> registrations;
     @ManyToOne
