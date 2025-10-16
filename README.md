@@ -1,10 +1,10 @@
-🏗️ Pyramid
+# 🏗️ Pyramid
 
 Pyramid is a backend application built with Spring Boot that manages player registrations for weekly tournaments (Magic: The Gathering, TCGs, tabletop games, etc.).
 The goal is to replace messy WhatsApp sign-ups with a structured, secure, and scalable system.
 
-🚀 Current Features
-👤 Authentication
+## 🚀 Current Features
+### 👤 Authentication
 
 Secure JWT-based authentication (signup / login endpoints).
 
@@ -16,7 +16,7 @@ Store → creates and manages tournaments.
 
 Passwords are encrypted using BCrypt.
 
-🧩 Tournament Management
+### 🧩 Tournament Management
 
 Stores can create tournaments with:
 
@@ -30,7 +30,7 @@ Available spots.
 
 “Full” status when capacity is reached.
 
-📝 Player Registration
+### 📝 Player Registration
 
 Players can register for tournaments.
 
@@ -50,7 +50,7 @@ Reserve status
 
 Registration time (for ordering and promotion priority)
 
-🧱 Tech Stack
+## 🧱 Tech Stack
 Layer	Technology
 Backend	Java 21, Spring Boot 3
 Database	PostgreSQL (Dockerized)
@@ -59,7 +59,7 @@ Build Tool	Maven
 ORM	Spring Data JPA / Hibernate
 API Testing	Postman
 Containerization	Docker Compose
-⚙️ Setup & Run
+## ⚙️ Setup & Run
 
 Clone the repository
 
@@ -83,7 +83,7 @@ Access the API
 
 http://localhost:8080
 
-📬 API Endpoints (main ones)
+### 📬 API Endpoints (main ones)
 Endpoint	Method	Description
 /auth/signup	POST	Register new user
 /auth/login	POST	Login and get JWT
@@ -91,7 +91,7 @@ Endpoint	Method	Description
 /api/registrations	POST	Register player to a tournament
 /api/registrations/delete	DELETE	Unregister player from a tournament
 /api/tournaments/upcoming	GET	View upcoming tournaments
-🧠 Project Architecture
+## 🧠 Project Architecture
 
 Controller layer → handles HTTP requests.
 
@@ -107,7 +107,7 @@ The project follows a clean layered architecture:
 
 Controller → Service → Repository → Database
 
-🔮 Next Steps
+##🔮 Next Steps
 
 Add favorite stores for players.
 
@@ -117,8 +117,8 @@ Implement email notifications for promotions or updates.
 
 Add a Flutter frontend (mobile-first approach).
 
-👨‍💻 Author
+### 👨‍💻 Author
 
 David Carcelén
 Backend Developer (Java / Spring Boot)
-🎸 Former professional musician — now composing clean code rhythms.
+🎸 Professional musician composing clean code rhythms.
