@@ -15,6 +15,7 @@ public record TournamentRequest(
         int maxPlayers,
         @NotBlank(message = "Format is required")
         String format,
+        String extraInfo,
         @NotNull(message = "Price is required")
         @DecimalMin(value = "0.0", message = "Price must be zero or positive")
         BigDecimal price,

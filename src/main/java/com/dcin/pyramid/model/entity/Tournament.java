@@ -7,8 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -28,12 +26,13 @@ public class Tournament {
     private LocalDateTime startDateTime;
     private int maxPlayers;
     private String format;
+    private String extraInfo;
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal prizeMoney;
     private boolean open;
-    private boolean full;
+    private boolean fullTournament;
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
     private List<Registration> registrations;
     @ManyToOne

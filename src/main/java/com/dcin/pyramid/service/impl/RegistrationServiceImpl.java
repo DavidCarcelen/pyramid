@@ -1,15 +1,19 @@
 package com.dcin.pyramid.service.impl;
 
 import com.dcin.pyramid.model.dto.GeneralResponse;
+import com.dcin.pyramid.model.dto.RegistrationInfoDTO;
 import com.dcin.pyramid.model.dto.RegistrationsResponse;
 import com.dcin.pyramid.model.entity.Registration;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.repository.RegistrationRepository;
 import com.dcin.pyramid.service.RegistrationService;
+import com.dcin.pyramid.service.TournamentService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,36 +22,30 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RegistrationServiceImpl implements RegistrationService {
     private final RegistrationRepository registrationRepository;
-    private final TournamentServiceImpl tournamentService;
+    private final TournamentService tournamentService;
 
     @Override
-    public RegistrationsResponse checkRegistrationAvailability(User player, UUID tournamentId) {
+    public RegistrationsResponse handleRegistration(User player, UUID tournamentId) {
         if (registrationRepository.existsByPlayerIdAndTournamentId(player.getId(), tournamentId)) {
             throw new IllegalArgumentException("Player already registered for this tournament!");
         }
         Tournament tournament = tournamentService.getTournamentById(tournamentId);
-        return tournament.isFull() ? newReserveListRegistration(player, tournament) : newRegistration(player, tournament);
+        RegistrationsResponse response = tournament.isFullTournament() ?
+                newRegistration(player, tournament, true) :
+                newRegistration(player, tournament, false);
+        tournamentService.updatePrizeMoneyAndSpotsAvailable(tournamentId, response.totalPlayers());
+        return response;
     }
 
     @Override
-    public RegistrationsResponse newRegistration(User player, Tournament tournament) {
+    public RegistrationsResponse newRegistration(User player, Tournament tournament, boolean reserveList) {
         Registration registration = Registration.builder()
                 .player(player)
                 .tournament(tournament)
+                .reserveList(reserveList)
                 .build();
         registrationRepository.save(registration);
-        return getRegistrations(tournament.getId());
-    }
-
-    @Override
-    public RegistrationsResponse newReserveListRegistration(User player, Tournament tournament) {
-        Registration registration = Registration.builder()
-                .player(player)
-                .tournament(tournament)
-                .reserveList(true)
-                .build();
-        registrationRepository.save(registration);
-        return getReserveRegistrations(tournament.getId());
+        return getAllRegistrations(tournament.getId());
     }
 
     @Override
@@ -55,7 +53,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Registration registration = registrationRepository.findByPlayerIdAndTournamentId(player.getId(), tournamentId)
                 .orElseThrow(() -> new IllegalArgumentException("Player not registered for this tournament!"));
         registrationRepository.delete(registration);
-        if(!registration.isReserveList()){
+        if (!registration.isReserveList()) {
             promotePlayerRegistration(tournamentId);
 
         }
@@ -63,27 +61,24 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationsResponse getRegistrations(UUID tournamentId) {
-        List<String> players = registrationRepository.findPlayerNicknamesByTournamentIdAndReserveList(tournamentId, false);
-        int totalPlayers = registrationRepository.countPlayersByTournamentIdAndReserveList(tournamentId, false);
-        tournamentService.updatePrizeMoneyAndSpotsAvailble(tournamentId, totalPlayers);
-        return new RegistrationsResponse("Players list:", players, totalPlayers);
-    }
-    @Override
-    public RegistrationsResponse getReserveRegistrations(UUID tournamentId) {
-        List<String> players = registrationRepository.findPlayerNicknamesByTournamentIdAndReserveList(tournamentId, true);
-        int totalPlayers = registrationRepository.countPlayersByTournamentIdAndReserveList(tournamentId, true);
-        return new RegistrationsResponse("Players in RESERVE list:", players, totalPlayers);
+    public RegistrationsResponse getAllRegistrations(UUID tournamentId) {
+        List<RegistrationInfoDTO> registrations =
+                registrationRepository.findAllRegistrationsByTournamentIdOrdered(tournamentId);
+        return new RegistrationsResponse("All registrations:", registrations, registrations.size());
     }
 
-    public void promotePlayerRegistration (UUID tournamentId){
+    @Transactional
+    public void promotePlayerRegistration(UUID tournamentId) {
         Optional<Registration> firstReserve = registrationRepository.findFirstByTournamentIdAndReserveListTrueOrderByRegisteredAtAsc(tournamentId);
-      firstReserve.ifPresent(reserve -> {
-          reserve.setReserveList(false);
-          registrationRepository.save(reserve);
-      });
+        if (firstReserve.isPresent()) {
+            Registration promoted = firstReserve.get();
+            promoted.setReserveList(false);
+            promoted.setRegisteredAt(LocalDateTime.now());
+            registrationRepository.save(promoted);
+        } else {
+            tournamentService.setTournamentNotFull(tournamentId);
+        }
 
     }
-
 
 }

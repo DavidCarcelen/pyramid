@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,6 +34,7 @@ public class TournamentServiceImpl implements TournamentService {
                 .startDateTime(request.startDateTime())
                 .maxPlayers(request.maxPlayers())
                 .format(request.format())
+                .extraInfo(request.extraInfo())
                 .price(request.price())
                 .organizer(organizer)
                 .open(request.open())
@@ -55,7 +55,7 @@ public class TournamentServiceImpl implements TournamentService {
         return new TournamentsResponse("Upcoming tournaments: ", tournaments);
     }
 
-
+    @Override
     public void tournamentIdChecker(UUID tournamentId) {
         if (!tournamentRepository.existsById(tournamentId)) {
             throw new IllegalArgumentException("Tournament not found");
@@ -65,41 +65,47 @@ public class TournamentServiceImpl implements TournamentService {
     @Override
     public SingleTournamentResponse updateTournament(TournamentRequest request, User user, UUID tournamentId) {
         Tournament tournamentToUpdate = tournamentRepository.findById(tournamentId)
-                .orElseThrow(()-> new IllegalArgumentException("Tournament not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
         tournamentToUpdate.setTournamentName(request.tournamentName());
         tournamentToUpdate.setStartDateTime(request.startDateTime());
         tournamentToUpdate.setMaxPlayers(request.maxPlayers());
         tournamentToUpdate.setFormat(request.format());
+        tournamentToUpdate.setExtraInfo(request.extraInfo());
         tournamentToUpdate.setPrice(request.price());
         tournamentToUpdate.setOpen(request.open());
         tournamentRepository.save(tournamentToUpdate);
 
-        return new SingleTournamentResponse("Tournament updated", tournamentToUpdate );
+        return new SingleTournamentResponse("Tournament updated", tournamentToUpdate);
     }
 
     @Override
     public GeneralResponse deleteTournament(User user, UUID tournamentId) {
         Tournament tournamentToDelete = tournamentRepository.findById(tournamentId)
-                .orElseThrow(()-> new IllegalArgumentException("tournament not found"));
+                .orElseThrow(() -> new IllegalArgumentException("tournament not found"));
         tournamentRepository.delete(tournamentToDelete);
         return new GeneralResponse("Tournament deleted");
     }
+
     @Override
-    public TournamentsResponse getAllTournaments(UUID userId){
+    public TournamentsResponse getAllTournaments(UUID userId) {
         return new TournamentsResponse("Tournaments history: ", tournamentRepository.findByOrganizerId(userId));
     }
-
+    @Override
     public Tournament getTournamentById(UUID tournamentId) {
         return tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new IllegalArgumentException("tournament not found."));
     }
-
-    public void updatePrizeMoneyAndSpotsAvailble(UUID tournamentid, int totalPlayers){
-        Tournament tournament = getTournamentById(tournamentid);
+    @Override
+    public void updatePrizeMoneyAndSpotsAvailable(UUID tournamentId, int totalPlayers) {
+        Tournament tournament = getTournamentById(tournamentId);
         tournament.setPrizeMoney(tournament.getPrice().multiply(new BigDecimal(totalPlayers)));
-        if (tournament.getMaxPlayers() == totalPlayers){
-            tournament.setFull(true);
-        }
+        tournament.setFullTournament(totalPlayers >= tournament.getMaxPlayers());
+        tournamentRepository.save(tournament);
+    }
+    @Override
+    public void setTournamentNotFull(UUID tournamentId) {
+        Tournament tournament = getTournamentById(tournamentId);
+        tournament.setFullTournament(false);
         tournamentRepository.save(tournament);
     }
 
