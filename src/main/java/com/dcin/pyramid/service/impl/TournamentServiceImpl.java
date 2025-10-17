@@ -109,5 +109,16 @@ public class TournamentServiceImpl implements TournamentService {
         tournamentRepository.save(tournament);
     }
 
+    @Override
+    public void checkTournamentOpen(Tournament tournament){
+        if(LocalDateTime.now().isAfter(tournament.getStartDateTime())){
+            tournament.setOpen(false);
+            tournamentRepository.save(tournament);
+        }
+        if(!tournament.isOpen()){
+            throw new IllegalArgumentException("Closed registrations for this tournament.");
+        }
+    }
+
 
 }

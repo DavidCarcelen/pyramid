@@ -1,15 +1,17 @@
 package com.dcin.pyramid.exception;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
+@Builder
 public class ErrorMessage {
-    private int statusCode;
-    private Date timestamp;
+    private int status;
+    private LocalDateTime timestamp;
     private String message;
-    private String body;
+    private String path;
 }

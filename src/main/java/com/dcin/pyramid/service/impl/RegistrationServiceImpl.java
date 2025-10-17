@@ -30,6 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new IllegalArgumentException("Player already registered for this tournament!");
         }
         Tournament tournament = tournamentService.getTournamentById(tournamentId);
+        tournamentService.checkTournamentOpen(tournament);
         RegistrationsResponse response = tournament.isFullTournament() ?
                 newRegistration(player, tournament, true) :
                 newRegistration(player, tournament, false);
@@ -52,6 +53,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public GeneralResponse deleteRegistration(User player, UUID tournamentId) {
         Registration registration = registrationRepository.findByPlayerIdAndTournamentId(player.getId(), tournamentId)
                 .orElseThrow(() -> new IllegalArgumentException("Player not registered for this tournament!"));
+        tournamentService.checkTournamentOpen(registration.getTournament());
         registrationRepository.delete(registration);
         if (!registration.isReserveList()) {
             promotePlayerRegistration(tournamentId);

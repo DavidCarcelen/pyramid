@@ -22,5 +22,6 @@ public interface TournamentService {
     Tournament getTournamentById(UUID tournamentId);
     void updatePrizeMoneyAndSpotsAvailable(UUID tournamentId, int totalPlayers);
     void setTournamentNotFull(UUID tournamentId);
+    void checkTournamentOpen(Tournament tournament);
 
 }

@@ -30,7 +30,7 @@ public class RegistrationController {
 
     @GetMapping("/{tournamentId}")
     public ResponseEntity<RegistrationsResponse> getPlayersForOneTournament(@PathVariable UUID tournamentId){
-        return ResponseEntity.ok(registrationService.getRegistrations(tournamentId));
+        return ResponseEntity.ok(registrationService.getAllRegistrations(tournamentId));
     }
 
 }
