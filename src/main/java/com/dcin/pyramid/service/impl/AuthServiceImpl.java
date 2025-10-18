@@ -35,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
     public JwtResponse signup(SignUpRequest request) {
         userRepository.findByEmail(request.email())
                 .ifPresent(user -> {
-                    throw new UserAlreadyRegisteredException("Email already registered.");
+                    throw new UserAlreadyRegisteredException();
                 });
         userRepository.findByNickname(request.nickname())
                 .ifPresent(user -> {

@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorMessage> userNotFoundException(UserNotFoundException exception, WebRequest request){
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorMessage> userNotFoundException(EntityNotFoundException exception, WebRequest request){
         return buildErrorResponse(exception, HttpStatus.NOT_FOUND, request);
 
     }
@@ -31,6 +31,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorMessage> fullTournamentException(FullTournamentException exception, WebRequest request){
 
         return buildErrorResponse(exception, HttpStatus.CONFLICT, request);
+    }
+    @ExceptionHandler(ClosedTournamentException.class)
+    public ResponseEntity<ErrorMessage> closeTournamentException(ClosedTournamentException exception, WebRequest request){
+        return buildErrorResponse(exception, HttpStatus.CONFLICT, request);
+    }
+    @ExceptionHandler(RoleException.class)
+    public ResponseEntity<ErrorMessage> roleException (RoleException exception, WebRequest request){
+        return buildErrorResponse(exception,HttpStatus.UNAUTHORIZED, request);
     }
 
     private ResponseEntity<ErrorMessage> buildErrorResponse(Exception ex, HttpStatus status, WebRequest request){

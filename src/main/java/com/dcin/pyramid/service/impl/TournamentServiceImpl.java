@@ -1,5 +1,7 @@
 package com.dcin.pyramid.service.impl;
 
+import com.dcin.pyramid.exception.ClosedTournamentException;
+import com.dcin.pyramid.exception.EntityNotFoundException;
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.SingleTournamentResponse;
 import com.dcin.pyramid.model.dto.TournamentRequest;
@@ -55,17 +57,10 @@ public class TournamentServiceImpl implements TournamentService {
         return new TournamentsResponse("Upcoming tournaments: ", tournaments);
     }
 
-    @Override
-    public void tournamentIdChecker(UUID tournamentId) {
-        if (!tournamentRepository.existsById(tournamentId)) {
-            throw new IllegalArgumentException("Tournament not found");
-        }
-    }
 
     @Override
     public SingleTournamentResponse updateTournament(TournamentRequest request, User user, UUID tournamentId) {
-        Tournament tournamentToUpdate = tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
+        Tournament tournamentToUpdate = getTournamentById(tournamentId);
         tournamentToUpdate.setTournamentName(request.tournamentName());
         tournamentToUpdate.setStartDateTime(request.startDateTime());
         tournamentToUpdate.setMaxPlayers(request.maxPlayers());
@@ -80,8 +75,7 @@ public class TournamentServiceImpl implements TournamentService {
 
     @Override
     public GeneralResponse deleteTournament(User user, UUID tournamentId) {
-        Tournament tournamentToDelete = tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new IllegalArgumentException("tournament not found"));
+        Tournament tournamentToDelete = getTournamentById(tournamentId);
         tournamentRepository.delete(tournamentToDelete);
         return new GeneralResponse("Tournament deleted");
     }
@@ -90,11 +84,13 @@ public class TournamentServiceImpl implements TournamentService {
     public TournamentsResponse getAllTournaments(UUID userId) {
         return new TournamentsResponse("Tournaments history: ", tournamentRepository.findByOrganizerId(userId));
     }
+
     @Override
     public Tournament getTournamentById(UUID tournamentId) {
         return tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new IllegalArgumentException("tournament not found."));
+                .orElseThrow(() -> new EntityNotFoundException("tournament not found."));
     }
+
     @Override
     public void updatePrizeMoneyAndSpotsAvailable(UUID tournamentId, int totalPlayers) {
         Tournament tournament = getTournamentById(tournamentId);
@@ -102,6 +98,7 @@ public class TournamentServiceImpl implements TournamentService {
         tournament.setFullTournament(totalPlayers >= tournament.getMaxPlayers());
         tournamentRepository.save(tournament);
     }
+
     @Override
     public void setTournamentNotFull(UUID tournamentId) {
         Tournament tournament = getTournamentById(tournamentId);
@@ -110,13 +107,13 @@ public class TournamentServiceImpl implements TournamentService {
     }
 
     @Override
-    public void checkTournamentOpen(Tournament tournament){
-        if(LocalDateTime.now().isAfter(tournament.getStartDateTime())){
+    public void checkTournamentOpen(Tournament tournament) {
+        if (LocalDateTime.now().isAfter(tournament.getStartDateTime())) {
             tournament.setOpen(false);
             tournamentRepository.save(tournament);
         }
-        if(!tournament.isOpen()){
-            throw new IllegalArgumentException("Closed registrations for this tournament.");
+        if (!tournament.isOpen()) {
+            throw new ClosedTournamentException();
         }
     }
 

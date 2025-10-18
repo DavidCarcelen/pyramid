@@ -9,8 +9,8 @@ import java.util.UUID;
 
 public interface UserService {
     void checkUserRole(User user, Role role);
-    void checkId(UUID id);
     GeneralResponse updateUser(User user, SignUpRequest request);
     GeneralResponse deleteUser(User user);
+    User getUserById(UUID userId);
 
 }

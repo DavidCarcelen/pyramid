@@ -1,5 +1,7 @@
 package com.dcin.pyramid.service.impl;
 
+import com.dcin.pyramid.exception.UserAlreadyRegisteredException;
+import com.dcin.pyramid.exception.EntityNotFoundException;
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.RegistrationInfoDTO;
 import com.dcin.pyramid.model.dto.RegistrationsResponse;
@@ -27,7 +29,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public RegistrationsResponse handleRegistration(User player, UUID tournamentId) {
         if (registrationRepository.existsByPlayerIdAndTournamentId(player.getId(), tournamentId)) {
-            throw new IllegalArgumentException("Player already registered for this tournament!");
+            throw new UserAlreadyRegisteredException("Player already registered for this tournament!");
         }
         Tournament tournament = tournamentService.getTournamentById(tournamentId);
         tournamentService.checkTournamentOpen(tournament);
@@ -52,7 +54,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public GeneralResponse deleteRegistration(User player, UUID tournamentId) {
         Registration registration = registrationRepository.findByPlayerIdAndTournamentId(player.getId(), tournamentId)
-                .orElseThrow(() -> new IllegalArgumentException("Player not registered for this tournament!"));
+                .orElseThrow(() -> new EntityNotFoundException("Player not registered for this tournament!"));
         tournamentService.checkTournamentOpen(registration.getTournament());
         registrationRepository.delete(registration);
         if (!registration.isReserveList()) {
