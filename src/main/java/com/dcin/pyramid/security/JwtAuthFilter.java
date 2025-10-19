@@ -1,5 +1,8 @@
 package com.dcin.pyramid.security;
 
+import com.dcin.pyramid.exception.InvalidJwtException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,8 +49,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     );
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (Exception e) {
-            System.out.println("Invalid JWT: " + e.getMessage()); // modificar a exception handler!!!
+        } catch (ExpiredJwtException e) {
+            throw new InvalidJwtException("Token has expired.");
+        } catch (JwtException e){
+            throw  new InvalidJwtException("Token is invalid." + e.getMessage());
         }
 
         filterChain.doFilter(request, response);

@@ -49,7 +49,6 @@ public class TournamentServiceImpl implements TournamentService {
     public TournamentsResponse getUpcomingTournamentsByStore(UUID storeId) {
         List<Tournament> tournaments;
         if (storeId != null) {
-            userService.checkId(storeId);
             tournaments = tournamentRepository.findByOrganizerIdAndStartDateTimeAfter(storeId, LocalDate.now());
         } else {
             tournaments = tournamentRepository.findAllByStartDateTimeAfter(LocalDateTime.now());
@@ -92,10 +91,10 @@ public class TournamentServiceImpl implements TournamentService {
     }
 
     @Override
-    public void updatePrizeMoneyAndSpotsAvailable(UUID tournamentId, int totalPlayers) {
+    public void updatePrizeMoneyAndSpotsAvailable(UUID tournamentId, int activePlayers) {
         Tournament tournament = getTournamentById(tournamentId);
-        tournament.setPrizeMoney(tournament.getPrice().multiply(new BigDecimal(totalPlayers)));
-        tournament.setFullTournament(totalPlayers >= tournament.getMaxPlayers());
+        tournament.setPrizeMoney(tournament.getPrice().multiply(new BigDecimal(activePlayers)));
+        tournament.setFullTournament(activePlayers >= tournament.getMaxPlayers());
         tournamentRepository.save(tournament);
     }
 
@@ -103,6 +102,7 @@ public class TournamentServiceImpl implements TournamentService {
     public void setTournamentNotFull(UUID tournamentId) {
         Tournament tournament = getTournamentById(tournamentId);
         tournament.setFullTournament(false);
+        //update prize and spots
         tournamentRepository.save(tournament);
     }
 

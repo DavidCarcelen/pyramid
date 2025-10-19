@@ -37,6 +37,10 @@ public interface RegistrationRepository extends JpaRepository<Registration, UUID
 """)
     List<RegistrationInfoDTO> findAllRegistrationsByTournamentIdOrdered(UUID tournamentId);
 
+    @Query("SELECT COUNT(r) FROM Registration r WHERE r.tournament.id = :tournamentId AND r.reserveList = false")
+    int countActivePlayersByTournamentId(UUID tournamentId);
+
+
 
 
 

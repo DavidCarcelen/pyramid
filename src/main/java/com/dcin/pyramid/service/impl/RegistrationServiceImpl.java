@@ -68,7 +68,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     public RegistrationsResponse getAllRegistrations(UUID tournamentId) {
         List<RegistrationInfoDTO> registrations =
                 registrationRepository.findAllRegistrationsByTournamentIdOrdered(tournamentId);
-        return new RegistrationsResponse("All registrations:", registrations, registrations.size());
+        int activePlayers = registrationRepository.countActivePlayersByTournamentId(tournamentId);
+        return new RegistrationsResponse("All registrations:", registrations, activePlayers);
     }
 
     @Transactional
@@ -81,6 +82,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             registrationRepository.save(promoted);
         } else {
             tournamentService.setTournamentNotFull(tournamentId);
+            int activePlayers = registrationRepository.countActivePlayersByTournamentId(tournamentId);
+            tournamentService.updatePrizeMoneyAndSpotsAvailable(tournamentId, activePlayers);
         }
 
     }

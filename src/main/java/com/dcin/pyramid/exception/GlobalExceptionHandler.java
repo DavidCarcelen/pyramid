@@ -41,6 +41,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildErrorResponse(exception,HttpStatus.UNAUTHORIZED, request);
     }
 
+    @ExceptionHandler(InvalidJwtException.class)
+    public ResponseEntity<ErrorMessage> invalidJwtException (InvalidJwtException exception, WebRequest request){
+        return buildErrorResponse(exception, HttpStatus.UNAUTHORIZED, request);
+    }
+
     private ResponseEntity<ErrorMessage> buildErrorResponse(Exception ex, HttpStatus status, WebRequest request){
         ErrorMessage errorMessage = ErrorMessage.builder()
                 .status(status.value())
