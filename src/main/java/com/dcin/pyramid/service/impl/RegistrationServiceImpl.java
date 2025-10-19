@@ -70,7 +70,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         }
         return new GeneralResponse(registration.getPlayer().getNickname() + " registration deleted.");
-    }
+    } //cuidado en el proceso hay doble tournament save!!!
 
     @Override
     public RegistrationsResponse getAllRegistrations(UUID tournamentId) {

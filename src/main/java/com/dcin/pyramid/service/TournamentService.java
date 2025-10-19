@@ -19,8 +19,9 @@ public interface TournamentService {
     GeneralResponse deleteTournament(User user, UUID tournamentId);
     TournamentsResponse getAllTournaments(UUID userId);
     Tournament getTournamentById(UUID tournamentId);
-    void updatePrizeMoneyAndSpotsAvailable(UUID tournamentId, int totalPlayers);
+    void updatePrizeMoneyAndSpotsAvailable(UUID tournamentId, int activePlayers);
     void setTournamentNotFull(UUID tournamentId);
     void checkTournamentOpen(Tournament tournament);
+    GeneralResponse openCloseTournament(User user,UUID tournamentId, boolean state);
 
 }

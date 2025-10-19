@@ -9,6 +9,7 @@ import com.dcin.pyramid.service.TournamentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,13 @@ public class TournamentController {
     public ResponseEntity<GeneralResponse> deleteTournament(@AuthenticationPrincipal User user,
                                                             @PathVariable UUID tournamentId) {
         return ResponseEntity.ok(tournamentService.deleteTournament(user, tournamentId));
+    }
+    @PreAuthorize("hasRole('STORE')")
+    @PatchMapping("/store/{tournamentId}")
+    public ResponseEntity<GeneralResponse> setTournamentState(@AuthenticationPrincipal User user,
+                                                          @PathVariable UUID tournamentId,
+                                                          @RequestParam boolean open) {
+        return ResponseEntity.ok(tournamentService.openCloseTournament(user, tournamentId, open));
     }
 
     @GetMapping("/upcomingTournaments")

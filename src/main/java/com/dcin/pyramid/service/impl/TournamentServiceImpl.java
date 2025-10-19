@@ -2,6 +2,7 @@ package com.dcin.pyramid.service.impl;
 
 import com.dcin.pyramid.exception.ClosedTournamentException;
 import com.dcin.pyramid.exception.EntityNotFoundException;
+import com.dcin.pyramid.exception.UnauthorizedActionException;
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.SingleTournamentResponse;
 import com.dcin.pyramid.model.dto.TournamentRequest;
@@ -102,7 +103,6 @@ public class TournamentServiceImpl implements TournamentService {
     public void setTournamentNotFull(UUID tournamentId) {
         Tournament tournament = getTournamentById(tournamentId);
         tournament.setFullTournament(false);
-        //update prize and spots
         tournamentRepository.save(tournament);
     }
 
@@ -115,6 +115,18 @@ public class TournamentServiceImpl implements TournamentService {
         if (!tournament.isOpen()) {
             throw new ClosedTournamentException();
         }
+    }
+
+    @Override
+    public GeneralResponse openCloseTournament(User user, UUID tournamentId, boolean state) {
+        Tournament tournament = getTournamentById(tournamentId);
+        if(!user.equals(tournament.getOrganizer())){
+            throw new UnauthorizedActionException("Only for the tournament organizer.");
+        }
+        tournament.setOpen(state);
+        tournamentRepository.save(tournament);
+        String message = state? "open." : "closed.";
+        return new GeneralResponse("Tournament registrations " + message);
     }
 
 
