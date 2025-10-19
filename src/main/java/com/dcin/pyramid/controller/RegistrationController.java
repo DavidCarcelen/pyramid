@@ -20,24 +20,25 @@ public class RegistrationController {
 
     @PostMapping("/{tournamentId}")
     public ResponseEntity<RegistrationsResponse> newRegistration(@AuthenticationPrincipal User player,
-                                                           @PathVariable UUID tournamentId){
-        return ResponseEntity.ok(registrationService.handleRegistration(player,tournamentId));
+                                                                 @PathVariable UUID tournamentId) {
+        return ResponseEntity.ok(registrationService.handleRegistration(player, tournamentId));
     }
+
     @DeleteMapping("/{registrationId}")
     public ResponseEntity<GeneralResponse> deleteRegistration(@AuthenticationPrincipal User player,
-                                                              @PathVariable UUID registrationId){
-        return ResponseEntity.ok(registrationService.deleteRegistration(player,registrationId));
+                                                              @PathVariable UUID registrationId) {
+        return ResponseEntity.ok(registrationService.deleteRegistration(player, registrationId));
     }
 
     @GetMapping("/{tournamentId}")
-    public ResponseEntity<RegistrationsResponse> getPlayersForOneTournament(@PathVariable UUID tournamentId){
+    public ResponseEntity<RegistrationsResponse> getPlayersForOneTournament(@PathVariable UUID tournamentId) {
         return ResponseEntity.ok(registrationService.getAllRegistrations(tournamentId));
     }
 
     @PreAuthorize("hasRole('STORE')")
     @PatchMapping("/{registrationId}/mark-paid")
-    public ResponseEntity<GeneralResponse> markRegistrationAsPaid (@AuthenticationPrincipal User store,
-                                                                   @PathVariable UUID registrationId){
+    public ResponseEntity<GeneralResponse> markRegistrationAsPaid(@AuthenticationPrincipal User store,
+                                                                  @PathVariable UUID registrationId) {
         return ResponseEntity.ok(registrationService.markAsPaid(store, registrationId));
     }
 

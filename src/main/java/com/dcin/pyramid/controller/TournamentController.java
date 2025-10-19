@@ -32,7 +32,7 @@ public class TournamentController {
         return ResponseEntity.ok(tournamentService.getAllTournaments(user.getId()));
     }
 
-    @PostMapping("/store/update")
+    @PutMapping("/store/update")
     public ResponseEntity<SingleTournamentResponse> updateTournament(@AuthenticationPrincipal User user,
                                                                      @Valid @RequestBody TournamentRequest tournamentRequest,
                                                                      @RequestParam(required = true) UUID tournamentId) {

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public GeneralResponse updateUser(@AuthenticationPrincipal User user,
                                       @Valid @RequestBody SignUpRequest request) {
         return userService.updateUser(user, request);
