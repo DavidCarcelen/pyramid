@@ -1,5 +1,7 @@
 package com.dcin.pyramid.service.impl;
 
+import com.dcin.pyramid.exception.BadCredentialsException;
+import com.dcin.pyramid.exception.UnauthorizedActionException;
 import com.dcin.pyramid.exception.UserAlreadyRegisteredException;
 import com.dcin.pyramid.exception.EntityNotFoundException;
 import com.dcin.pyramid.model.dto.GeneralResponse;
@@ -15,6 +17,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -50,18 +53,23 @@ public class RegistrationServiceImpl implements RegistrationService {
         registrationRepository.save(registration);
         return getAllRegistrations(tournament.getId());
     }
-
+    @Transactional
     @Override
-    public GeneralResponse deleteRegistration(User player, UUID tournamentId) {
-        Registration registration = registrationRepository.findByPlayerIdAndTournamentId(player.getId(), tournamentId)
-                .orElseThrow(() -> new EntityNotFoundException("Player not registered for this tournament!"));
-        tournamentService.checkTournamentOpen(registration.getTournament());
+    public GeneralResponse deleteRegistration(User user, UUID registrationId) {
+        Registration registration = registrationRepository.findById(registrationId)
+                .orElseThrow(() -> new EntityNotFoundException("Registration not found!"));
+        Tournament tournament = registration.getTournament();
+
+        if (!registration.getPlayer().equals(user) && !tournament.getOrganizer().equals(user)) {
+            throw new UnauthorizedActionException("Can't delete others registrations.");
+        }
+        tournamentService.checkTournamentOpen(tournament);
         registrationRepository.delete(registration);
         if (!registration.isReserveList()) {
-            promotePlayerRegistration(tournamentId);
+            promotePlayerRegistration(tournament.getId());
 
         }
-        return new GeneralResponse("Registration deleted.");
+        return new GeneralResponse(registration.getPlayer().getNickname() + " registration deleted.");
     }
 
     @Override
@@ -73,6 +81,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Transactional
+    @Override
     public void promotePlayerRegistration(UUID tournamentId) {
         Optional<Registration> firstReserve = registrationRepository.findFirstByTournamentIdAndReserveListTrueOrderByRegisteredAtAsc(tournamentId);
         if (firstReserve.isPresent()) {
@@ -86,6 +95,22 @@ public class RegistrationServiceImpl implements RegistrationService {
             tournamentService.updatePrizeMoneyAndSpotsAvailable(tournamentId, activePlayers);
         }
 
+    }
+
+    @Override
+    public GeneralResponse markAsPaid(User store, UUID registrationId) {
+        Registration registration = registrationRepository.findById(registrationId)
+                .orElseThrow(() -> new EntityNotFoundException("Registration not found"));
+        Tournament tournament = registration.getTournament();
+        if (!tournament.getOrganizer().equals(store)) {
+            throw new UnauthorizedActionException("Only the organizer can mark registrations as paid.");
+        }
+        if (registration.isPaid()) {
+            return new GeneralResponse(registration.getPlayer().getNickname() + " is already marked as paid.");
+        }
+        registration.setPaid(true);
+        registrationRepository.save(registration);
+        return new GeneralResponse(registration.getPlayer().getNickname() + " registration marked as paid.");
     }
 
 }

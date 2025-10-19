@@ -6,6 +6,7 @@ import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,15 +23,22 @@ public class RegistrationController {
                                                            @PathVariable UUID tournamentId){
         return ResponseEntity.ok(registrationService.handleRegistration(player,tournamentId));
     }
-    @DeleteMapping("/{tournamentId}")
+    @DeleteMapping("/{registrationId}")
     public ResponseEntity<GeneralResponse> deleteRegistration(@AuthenticationPrincipal User player,
-                                                              @PathVariable UUID tournamentId){
-        return ResponseEntity.ok(registrationService.deleteRegistration(player,tournamentId));
+                                                              @PathVariable UUID registrationId){
+        return ResponseEntity.ok(registrationService.deleteRegistration(player,registrationId));
     }
 
     @GetMapping("/{tournamentId}")
     public ResponseEntity<RegistrationsResponse> getPlayersForOneTournament(@PathVariable UUID tournamentId){
         return ResponseEntity.ok(registrationService.getAllRegistrations(tournamentId));
+    }
+
+    @PreAuthorize("hasRole('STORE')")
+    @PatchMapping("/{registrationId}/mark-paid")
+    public ResponseEntity<GeneralResponse> markRegistrationAsPaid (@AuthenticationPrincipal User store,
+                                                                   @PathVariable UUID registrationId){
+        return ResponseEntity.ok(registrationService.markAsPaid(store, registrationId));
     }
 
 }

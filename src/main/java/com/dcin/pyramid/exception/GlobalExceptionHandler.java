@@ -33,7 +33,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildErrorResponse(exception, HttpStatus.CONFLICT, request);
     }
     @ExceptionHandler(ClosedTournamentException.class)
-    public ResponseEntity<ErrorMessage> closeTournamentException(ClosedTournamentException exception, WebRequest request){
+    public ResponseEntity<ErrorMessage> closedTournamentException(ClosedTournamentException exception, WebRequest request){
         return buildErrorResponse(exception, HttpStatus.CONFLICT, request);
     }
     @ExceptionHandler(RoleException.class)
@@ -43,6 +43,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidJwtException.class)
     public ResponseEntity<ErrorMessage> invalidJwtException (InvalidJwtException exception, WebRequest request){
+        return buildErrorResponse(exception, HttpStatus.UNAUTHORIZED, request);
+    }
+
+    @ExceptionHandler(UnauthorizedActionException.class)
+    public ResponseEntity<ErrorMessage> unauthorizedActionException (UnauthorizedActionException exception, WebRequest request){
         return buildErrorResponse(exception, HttpStatus.UNAUTHORIZED, request);
     }
 
