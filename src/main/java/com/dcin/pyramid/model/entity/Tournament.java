@@ -31,7 +31,7 @@ public class Tournament {
     private BigDecimal price;
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal prizeMoney;
-    private boolean open;
+    private boolean openTournament;
     private boolean fullTournament;
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
     private List<Registration> registrations;

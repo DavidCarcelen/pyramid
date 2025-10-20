@@ -1,4 +1,4 @@
-INSERT INTO user (id, email, password, nickname, role)
+INSERT INTO _user (id, email, password, nickname, role)
 VALUES
     ('7b6f44b5-9c28-4a45-bc26-67c2f5d43101', 'serpi@example.com', '$2a$10$QmH9zG7sU2/kL3S7J2nKGeN8ErYfMoKJ4P0R0L7BAvG1xqduzTtLi', 'Serpi', 'STORE'),
     ('9b1a37ef-4b7a-4125-b589-94c79bdbbb02', 'pasku@example.com', '$2a$10$QmH9zG7sU2/kL3S7J2nKGeN8ErYfMoKJ4P0R0L7BAvG1xqduzTtLi', 'Pasku', 'STORE'),
@@ -26,8 +26,8 @@ VALUES
         extra_info,
         price,
         prize_money,
-        open,
-        full,
+        open_tournament,
+        full_tournament,
         organizer_id
     )
     VALUES

@@ -40,7 +40,7 @@ public class TournamentServiceImpl implements TournamentService {
                 .extraInfo(request.extraInfo())
                 .price(request.price())
                 .organizer(organizer)
-                .open(request.open())
+                .openTournament(request.open())
                 .build();
         tournamentRepository.save(tournament);
         return new SingleTournamentResponse("Tournament created!", tournament);
@@ -67,7 +67,7 @@ public class TournamentServiceImpl implements TournamentService {
         tournamentToUpdate.setFormat(request.format());
         tournamentToUpdate.setExtraInfo(request.extraInfo());
         tournamentToUpdate.setPrice(request.price());
-        tournamentToUpdate.setOpen(request.open());
+        tournamentToUpdate.setOpenTournament(request.open());
         tournamentRepository.save(tournamentToUpdate);
 
         return new SingleTournamentResponse("Tournament updated", tournamentToUpdate);
@@ -109,10 +109,10 @@ public class TournamentServiceImpl implements TournamentService {
     @Override
     public void checkTournamentOpen(Tournament tournament) {
         if (LocalDateTime.now().isAfter(tournament.getStartDateTime())) {
-            tournament.setOpen(false);
+            tournament.setOpenTournament(false);
             tournamentRepository.save(tournament);
         }
-        if (!tournament.isOpen()) {
+        if (!tournament.isOpenTournament()) {
             throw new ClosedTournamentException();
         }
     }
@@ -123,7 +123,7 @@ public class TournamentServiceImpl implements TournamentService {
         if(!user.equals(tournament.getOrganizer())){
             throw new UnauthorizedActionException("Only for the tournament organizer.");
         }
-        tournament.setOpen(state);
+        tournament.setOpenTournament(state);
         tournamentRepository.save(tournament);
         String message = state? "open." : "closed.";
         return new GeneralResponse("Tournament registrations " + message);
