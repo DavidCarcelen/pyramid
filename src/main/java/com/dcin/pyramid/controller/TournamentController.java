@@ -24,8 +24,8 @@ public class TournamentController {
 
     @PreAuthorize("hasRole('STORE')")
     @PostMapping("/store/new")
-    public ResponseEntity<SingleTournamentResponse> createTournament(@Valid @RequestBody TournamentRequest request,
-                                                                     @AuthenticationPrincipal User user) {
+    public ResponseEntity<SingleTournamentResponse> createTournament(@AuthenticationPrincipal User user,
+                                                                     @Valid @RequestBody TournamentRequest request) {
         return ResponseEntity.ok(tournamentService.createTournament(request, user));
     }
     @PreAuthorize("hasRole('STORE')")
@@ -50,8 +50,15 @@ public class TournamentController {
     @PatchMapping("/store/{tournamentId}")
     public ResponseEntity<GeneralResponse> setTournamentState(@AuthenticationPrincipal User user,
                                                           @PathVariable UUID tournamentId,
-                                                          @RequestParam boolean open) {
-        return ResponseEntity.ok(tournamentService.openCloseTournament(user, tournamentId, open));
+                                                          @RequestParam boolean openTournament) {
+        return ResponseEntity.ok(tournamentService.openCloseTournament(user, tournamentId, openTournament));
+    }
+    @PreAuthorize("hasRole('STORE')")
+    @PatchMapping("/store/code/{tournamentId}")
+    public ResponseEntity<GeneralResponse> setTournamentCompanionCode(@AuthenticationPrincipal User user,
+                                                              @PathVariable UUID tournamentId,
+                                                              @RequestParam String companionCode) {
+        return ResponseEntity.ok(tournamentService.addCompanionCode(user, tournamentId, companionCode));
     }
 
     @GetMapping("/upcomingTournaments")

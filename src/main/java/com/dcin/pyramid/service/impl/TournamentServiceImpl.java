@@ -39,6 +39,7 @@ public class TournamentServiceImpl implements TournamentService {
                 .extraInfo(request.extraInfo())
                 .price(request.price())
                 .organizer(organizer)
+                .prizeMoney(new BigDecimal(0))
                 .openTournament(request.openTournament())
                 .build();
         tournamentRepository.save(tournament);
@@ -49,7 +50,7 @@ public class TournamentServiceImpl implements TournamentService {
     public TournamentsResponse getUpcomingTournamentsByStore(UUID storeId) {
         List<Tournament> tournaments;
         if (storeId != null) {
-            tournaments = tournamentRepository.findByOrganizerIdAndStartDateTimeAfter(storeId, LocalDate.now());
+            tournaments = tournamentRepository.findByOrganizerIdAndStartDateTimeAfter(storeId, LocalDateTime.now());
         } else {
             tournaments = tournamentRepository.findAllByStartDateTimeAfter(LocalDateTime.now());
         }
@@ -138,6 +139,17 @@ public class TournamentServiceImpl implements TournamentService {
     public SingleTournamentResponse getOneTournament(UUID tournamentId) {
         Tournament tournament = getTournamentById(tournamentId);
         return new SingleTournamentResponse("Tournament", tournamentMapper.toDTO(tournament));
+    }
+
+    @Override
+    public GeneralResponse addCompanionCode(User user, UUID tournamentId, String companionCode) {
+        Tournament tournament = getTournamentById(tournamentId);
+        if(!user.equals(tournament.getOrganizer())){
+            throw new UnauthorizedActionException("Only for the tournament organizer.");
+        }
+        tournament.setCompanionCode(companionCode);
+        tournamentRepository.save(tournament);
+        return new GeneralResponse("Companion code added successfully  ");
     }
 
 

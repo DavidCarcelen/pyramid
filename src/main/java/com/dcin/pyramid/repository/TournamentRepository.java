@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface TournamentRepository extends JpaRepository<Tournament, UUID> {
     List<Tournament> findByOrganizerId(UUID storeId);
-    List<Tournament> findByOrganizerIdAndStartDateTimeAfter(UUID organizerId, LocalDate date);
+    List<Tournament> findByOrganizerIdAndStartDateTimeAfter(UUID organizerId, LocalDateTime date);
     List<Tournament> findAllByStartDateTimeAfter(LocalDateTime date);
 
 }

@@ -29,7 +29,7 @@ public class Tournament {
     private String extraInfo;
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false, precision = 10, scale = 2)//maybe take this out?
     private BigDecimal prizeMoney;
     private boolean openTournament;
     private boolean fullTournament;
@@ -38,4 +38,5 @@ public class Tournament {
     @ManyToOne
     @JoinColumn(nullable = false)
     private User organizer;
+    private String companionCode;
 }

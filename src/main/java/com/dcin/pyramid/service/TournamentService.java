@@ -25,5 +25,6 @@ public interface TournamentService {
     GeneralResponse openCloseTournament(User user,UUID tournamentId, boolean state);
 
     SingleTournamentResponse getOneTournament(UUID tournamentId);
+    GeneralResponse addCompanionCode(User user,UUID tournamentId, String companionCode);
 
 }
