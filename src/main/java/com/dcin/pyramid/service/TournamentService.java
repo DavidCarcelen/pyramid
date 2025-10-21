@@ -24,4 +24,6 @@ public interface TournamentService {
     void checkTournamentOpen(Tournament tournament);
     GeneralResponse openCloseTournament(User user,UUID tournamentId, boolean state);
 
+    SingleTournamentResponse getOneTournament(UUID tournamentId);
+
 }

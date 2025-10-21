@@ -134,5 +134,11 @@ public class TournamentServiceImpl implements TournamentService {
         return new GeneralResponse("Tournament registrations " + message);
     }
 
+    @Override
+    public SingleTournamentResponse getOneTournament(UUID tournamentId) {
+        Tournament tournament = getTournamentById(tournamentId);
+        return new SingleTournamentResponse("Tournament", tournamentMapper.toDTO(tournament));
+    }
+
 
 }

@@ -53,7 +53,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .reserveList(reserveList)
                 .build();
         registrationRepository.save(registration);
-        return getAllRegistrations(tournament.getId());/// cuidad getDTO
+        return getAllRegistrations(tournament.getId());// cuidado getDTO
     }
     @Transactional
     @Override

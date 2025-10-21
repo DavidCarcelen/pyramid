@@ -4,6 +4,7 @@ import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.SingleTournamentResponse;
 import com.dcin.pyramid.model.dto.TournamentRequest;
 import com.dcin.pyramid.model.dto.TournamentsResponse;
+import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.service.TournamentService;
 import jakarta.validation.Valid;
@@ -58,7 +59,10 @@ public class TournamentController {
 
         return ResponseEntity.ok(tournamentService.getUpcomingTournamentsByStore(storeId));
     }
+    @GetMapping("/getOneTournament/{tournamentId}")
+    public ResponseEntity<SingleTournamentResponse> getOneTournament(@PathVariable UUID tournamentId){
 
-    //getOneTournament
+        return ResponseEntity.ok(tournamentService.getOneTournament(tournamentId));
+    }
 
 }
