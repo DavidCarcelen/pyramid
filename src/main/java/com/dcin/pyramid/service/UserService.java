@@ -2,6 +2,7 @@ package com.dcin.pyramid.service;
 
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.SignUpRequest;
+import com.dcin.pyramid.model.dto.UserDTO;
 import com.dcin.pyramid.model.entity.Role;
 import com.dcin.pyramid.model.entity.User;
 
@@ -12,5 +13,6 @@ public interface UserService {
     GeneralResponse updateUser(User user, SignUpRequest request);
     GeneralResponse deleteUser(User user);
     User getUserById(UUID userId);
+    UserDTO getUserDTO(User user);
 
 }

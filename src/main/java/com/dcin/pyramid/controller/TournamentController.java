@@ -21,24 +21,25 @@ import java.util.UUID;
 public class TournamentController {
     private final TournamentService tournamentService;
 
+    @PreAuthorize("hasRole('STORE')")
     @PostMapping("/store/new")
     public ResponseEntity<SingleTournamentResponse> createTournament(@Valid @RequestBody TournamentRequest request,
                                                                      @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(tournamentService.createTournament(request, user));
     }
-
+    @PreAuthorize("hasRole('STORE')")
     @GetMapping("/store/myTournaments")
     public ResponseEntity<TournamentsResponse> getAllMyTournaments(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(tournamentService.getAllTournaments(user.getId()));
     }
-
+    @PreAuthorize("hasRole('STORE')")
     @PutMapping("/store/update")
     public ResponseEntity<SingleTournamentResponse> updateTournament(@AuthenticationPrincipal User user,
                                                                      @Valid @RequestBody TournamentRequest tournamentRequest,
                                                                      @RequestParam(required = true) UUID tournamentId) {
         return ResponseEntity.ok(tournamentService.updateTournament(tournamentRequest, user, tournamentId));
     }
-
+    @PreAuthorize("hasRole('STORE')")
     @DeleteMapping("/store/{tournamentId}")
     public ResponseEntity<GeneralResponse> deleteTournament(@AuthenticationPrincipal User user,
                                                             @PathVariable UUID tournamentId) {
@@ -57,5 +58,7 @@ public class TournamentController {
 
         return ResponseEntity.ok(tournamentService.getUpcomingTournamentsByStore(storeId));
     }
+
+    //getOneTournament
 
 }

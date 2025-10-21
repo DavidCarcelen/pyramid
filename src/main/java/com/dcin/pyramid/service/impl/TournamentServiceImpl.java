@@ -3,12 +3,10 @@ package com.dcin.pyramid.service.impl;
 import com.dcin.pyramid.exception.ClosedTournamentException;
 import com.dcin.pyramid.exception.EntityNotFoundException;
 import com.dcin.pyramid.exception.UnauthorizedActionException;
-import com.dcin.pyramid.model.dto.GeneralResponse;
-import com.dcin.pyramid.model.dto.SingleTournamentResponse;
-import com.dcin.pyramid.model.dto.TournamentRequest;
-import com.dcin.pyramid.model.dto.TournamentsResponse;
+import com.dcin.pyramid.model.dto.*;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
+import com.dcin.pyramid.model.mappers.TournamentMapper;
 import com.dcin.pyramid.repository.TournamentRepository;
 import com.dcin.pyramid.service.TournamentService;
 import com.dcin.pyramid.service.UserService;
@@ -28,6 +26,7 @@ public class TournamentServiceImpl implements TournamentService {
 
     private final TournamentRepository tournamentRepository;
     private final UserService userService;
+    private final TournamentMapper tournamentMapper;
 
     @Transactional
     @Override
@@ -40,10 +39,10 @@ public class TournamentServiceImpl implements TournamentService {
                 .extraInfo(request.extraInfo())
                 .price(request.price())
                 .organizer(organizer)
-                .openTournament(request.open())
+                .openTournament(request.openTournament())
                 .build();
         tournamentRepository.save(tournament);
-        return new SingleTournamentResponse("Tournament created!", tournament);
+        return new SingleTournamentResponse("Tournament created!", tournamentMapper.toDTO(tournament));
     }
 
     @Override
@@ -54,7 +53,10 @@ public class TournamentServiceImpl implements TournamentService {
         } else {
             tournaments = tournamentRepository.findAllByStartDateTimeAfter(LocalDateTime.now());
         }
-        return new TournamentsResponse("Upcoming tournaments: ", tournaments);
+        List<TournamentDTO> dtoList = tournaments.stream()
+                .map(tournamentMapper::toDTO)
+                .toList();
+        return new TournamentsResponse("Upcoming tournaments: ", dtoList);
     }
 
 
@@ -67,10 +69,10 @@ public class TournamentServiceImpl implements TournamentService {
         tournamentToUpdate.setFormat(request.format());
         tournamentToUpdate.setExtraInfo(request.extraInfo());
         tournamentToUpdate.setPrice(request.price());
-        tournamentToUpdate.setOpenTournament(request.open());
+        tournamentToUpdate.setOpenTournament(request.openTournament());
         tournamentRepository.save(tournamentToUpdate);
 
-        return new SingleTournamentResponse("Tournament updated", tournamentToUpdate);
+        return new SingleTournamentResponse("Tournament updated", tournamentMapper.toDTO(tournamentToUpdate));
     }
 
     @Override
@@ -82,7 +84,10 @@ public class TournamentServiceImpl implements TournamentService {
 
     @Override
     public TournamentsResponse getAllTournaments(UUID userId) {
-        return new TournamentsResponse("Tournaments history: ", tournamentRepository.findByOrganizerId(userId));
+        List<TournamentDTO> dtoList = tournamentRepository.findByOrganizerId(userId).stream()
+                .map(tournamentMapper::toDTO)
+                .toList();
+        return new TournamentsResponse("Tournaments history: ", dtoList);
     }
 
     @Override

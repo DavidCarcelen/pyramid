@@ -4,5 +4,5 @@ import com.dcin.pyramid.model.entity.Tournament;
 
 import java.util.List;
 
-public record TournamentsResponse(String message, List<Tournament> tournaments) {
+public record TournamentsResponse(String message, List<TournamentDTO> tournaments) {
 }

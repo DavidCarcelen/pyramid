@@ -5,8 +5,10 @@ import com.dcin.pyramid.exception.RoleException;
 import com.dcin.pyramid.exception.UserAlreadyRegisteredException;
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.SignUpRequest;
+import com.dcin.pyramid.model.dto.UserDTO;
 import com.dcin.pyramid.model.entity.Role;
 import com.dcin.pyramid.model.entity.User;
+import com.dcin.pyramid.model.mappers.UserMapper;
 import com.dcin.pyramid.repository.UserRepository;
 import com.dcin.pyramid.service.UserService;
 import jakarta.transaction.Transactional;
@@ -25,6 +27,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     @Override
     public void checkUserRole(User user, Role role) {
@@ -60,6 +63,11 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found."));
+    }
+
+    @Override
+    public UserDTO getUserDTO(User user) {
+        return userMapper.toDTO(user);
     }
 
 }

@@ -2,6 +2,7 @@ package com.dcin.pyramid.controller;
 
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.SignUpRequest;
+import com.dcin.pyramid.model.dto.UserDTO;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.service.UserService;
 import jakarta.validation.Valid;
@@ -25,5 +26,10 @@ public class UserController {
     public GeneralResponse deleteUser(@AuthenticationPrincipal User user) {
 
         return userService.deleteUser(user);
+    }
+
+    @GetMapping ("/myProfile")
+    public UserDTO myProfile (@AuthenticationPrincipal User user){
+        return userService.getUserDTO(user);
     }
 }

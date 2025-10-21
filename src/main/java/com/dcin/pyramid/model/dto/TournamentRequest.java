@@ -20,5 +20,5 @@ public record TournamentRequest(
         @DecimalMin(value = "0.0", message = "Price must be zero or positive")
         BigDecimal price,
         @NotNull(message = "Open or closed is required")
-        boolean open){
+        boolean openTournament){
 }

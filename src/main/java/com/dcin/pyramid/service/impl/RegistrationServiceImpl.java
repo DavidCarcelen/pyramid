@@ -10,6 +10,7 @@ import com.dcin.pyramid.model.dto.RegistrationsResponse;
 import com.dcin.pyramid.model.entity.Registration;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
+import com.dcin.pyramid.model.mappers.RegistrationMapper;
 import com.dcin.pyramid.repository.RegistrationRepository;
 import com.dcin.pyramid.service.RegistrationService;
 import com.dcin.pyramid.service.TournamentService;
@@ -28,6 +29,7 @@ import java.util.UUID;
 public class RegistrationServiceImpl implements RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final TournamentService tournamentService;
+    private final RegistrationMapper registrationMapper;
 
     @Override
     public RegistrationsResponse handleRegistration(User player, UUID tournamentId) {
@@ -51,7 +53,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .reserveList(reserveList)
                 .build();
         registrationRepository.save(registration);
-        return getAllRegistrations(tournament.getId());
+        return getAllRegistrations(tournament.getId());/// cuidad getDTO
     }
     @Transactional
     @Override

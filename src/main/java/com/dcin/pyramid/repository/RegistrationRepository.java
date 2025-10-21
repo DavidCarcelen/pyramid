@@ -27,6 +27,7 @@ public interface RegistrationRepository extends JpaRepository<Registration, UUID
 
     @Query("""
     SELECT new com.dcin.pyramid.model.dto.RegistrationInfoDTO(
+        r.id,
         r.player.nickname,
         r.reserveList,
         r.registeredAt
