@@ -39,4 +39,5 @@ public class Tournament {
     @JoinColumn(nullable = false)
     private User organizer;
     private String companionCode;
+    private boolean finished;
 }

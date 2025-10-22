@@ -79,4 +79,11 @@ public class TournamentController {
         return ResponseEntity.ok(tournamentService.updateMaxPlayers(user, tournamentId, newMaxPlayers));
     }
 
+    @PreAuthorize("hasRole('STORE')")
+    @PatchMapping("/store/finishTournament/{tournamentId}")
+    public ResponseEntity<GeneralResponse> finishTournament(@AuthenticationPrincipal User user,
+                                                            @PathVariable UUID tournamentId){
+        return ResponseEntity.ok(tournamentService.finishTournament(user, tournamentId));
+    }
+
 }

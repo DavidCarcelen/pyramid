@@ -43,6 +43,7 @@ public class TournamentServiceImpl implements TournamentService {
                 .price(request.price())
                 .organizer(organizer)
                 .openTournament(request.openTournament())
+                .companionCode(request.companionCode())
                 .build();
         tournamentRepository.save(tournament);
         return new SingleTournamentResponse("Tournament created!", tournamentMapper.toDTO(tournament));
@@ -68,12 +69,14 @@ public class TournamentServiceImpl implements TournamentService {
         Tournament tournamentToUpdate = getTournamentById(tournamentId);
         tournamentToUpdate.setTournamentName(request.tournamentName());
         tournamentToUpdate.setStartDateTime(request.startDateTime());
-        tournamentToUpdate.setMaxPlayers(request.maxPlayers());
+        //tournamentToUpdate.setMaxPlayers(request.maxPlayers());
         tournamentToUpdate.setFormat(request.format());
         tournamentToUpdate.setExtraInfo(request.extraInfo());
         tournamentToUpdate.setPrice(request.price());
         tournamentToUpdate.setOpenTournament(request.openTournament());
+        tournamentToUpdate.setCompanionCode(request.companionCode());
         tournamentRepository.save(tournamentToUpdate);
+        updateMaxPlayers(user, tournamentId, request.maxPlayers());
 
         return new SingleTournamentResponse("Tournament updated", tournamentMapper.toDTO(tournamentToUpdate));
     }
@@ -172,9 +175,18 @@ public class TournamentServiceImpl implements TournamentService {
             promotion = registrationService.promotePlayerRegistration(tournamentId);
             tournament = getTournamentById(tournamentId);
         }
-
         return new GeneralResponse("MaxPlayers updated");
     }
 
+    @Override
+    public GeneralResponse finishTournament(User user, UUID tournamentId) {
+        Tournament tournament = getTournamentById(tournamentId);
+        if(!user.equals(tournament.getOrganizer())){
+            throw new UnauthorizedActionException("Only the tournament organizer can finish this tournament.");
+        }
+        tournament.setFinished(true);
+
+        return new GeneralResponse("Tournament finished");
+    }
 
 }

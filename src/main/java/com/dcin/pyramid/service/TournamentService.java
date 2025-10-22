@@ -29,4 +29,6 @@ public interface TournamentService {
 
     GeneralResponse updateMaxPlayers(User user, UUID tournamentId, int newMaxPlayers);
 
+    GeneralResponse finishTournament(User user, UUID tournamentId);
+
 }
