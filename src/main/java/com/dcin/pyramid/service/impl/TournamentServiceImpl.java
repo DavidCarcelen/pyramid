@@ -4,10 +4,12 @@ import com.dcin.pyramid.exception.ClosedTournamentException;
 import com.dcin.pyramid.exception.EntityNotFoundException;
 import com.dcin.pyramid.exception.UnauthorizedActionException;
 import com.dcin.pyramid.model.dto.*;
+import com.dcin.pyramid.model.entity.Registration;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.model.mappers.TournamentMapper;
 import com.dcin.pyramid.repository.TournamentRepository;
+import com.dcin.pyramid.service.RegistrationService;
 import com.dcin.pyramid.service.TournamentService;
 import com.dcin.pyramid.service.UserService;
 import jakarta.transaction.Transactional;
@@ -27,6 +29,7 @@ public class TournamentServiceImpl implements TournamentService {
     private final TournamentRepository tournamentRepository;
     private final UserService userService;
     private final TournamentMapper tournamentMapper;
+    private final RegistrationService registrationService;
 
     @Transactional
     @Override
@@ -39,7 +42,6 @@ public class TournamentServiceImpl implements TournamentService {
                 .extraInfo(request.extraInfo())
                 .price(request.price())
                 .organizer(organizer)
-                .prizeMoney(new BigDecimal(0))
                 .openTournament(request.openTournament())
                 .build();
         tournamentRepository.save(tournament);
@@ -105,12 +107,12 @@ public class TournamentServiceImpl implements TournamentService {
         tournamentRepository.save(tournament);
     }
 
-    @Override
+    /*@Override
     public void setTournamentNotFull(UUID tournamentId) {
         Tournament tournament = getTournamentById(tournamentId);
         tournament.setFullTournament(false);
         tournamentRepository.save(tournament);
-    }
+    }*/
 
     @Override
     public void checkTournamentOpen(Tournament tournament) {
@@ -150,6 +152,28 @@ public class TournamentServiceImpl implements TournamentService {
         tournament.setCompanionCode(companionCode);
         tournamentRepository.save(tournament);
         return new GeneralResponse("Companion code added successfully  ");
+    }
+
+    @Override
+    public GeneralResponse updateMaxPlayers(User user, UUID tournamentId, int newMaxPlayers) {
+        Tournament tournament = getTournamentById(tournamentId);
+        if(!user.equals(tournament.getOrganizer())){
+            throw new UnauthorizedActionException("Only the tournament organizer can modify player spots.");
+        }
+        int activePlayers = (int) tournament.getRegistrations().stream().filter(r -> !r.isReserveList()).count();
+        if(newMaxPlayers < activePlayers){
+            throw new UnauthorizedActionException("Can't set maxPlayers to less than current active players (" + activePlayers + ").");
+        }
+        tournament.setMaxPlayers(newMaxPlayers);
+        tournamentRepository.save(tournament);
+
+        boolean promotion = true;
+        while(!tournament.isFullTournament() && promotion){
+            promotion = registrationService.promotePlayerRegistration(tournamentId);
+            tournament = getTournamentById(tournamentId);
+        }
+
+        return new GeneralResponse("MaxPlayers updated");
     }
 
 

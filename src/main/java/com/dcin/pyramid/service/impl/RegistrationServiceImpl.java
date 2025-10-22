@@ -53,11 +53,13 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .reserveList(reserveList)
                 .build();
         registrationRepository.save(registration);
-        return getAllRegistrations(tournament.getId());// cuidado getDTO
+        return getAllRegistrations(tournament.getId());
     }
+
     @Transactional
     @Override
     public GeneralResponse deleteRegistration(User user, UUID registrationId) {
+        boolean promotion = false;
         Registration registration = registrationRepository.findById(registrationId)
                 .orElseThrow(() -> new EntityNotFoundException("Registration not found!"));
         Tournament tournament = registration.getTournament();
@@ -68,11 +70,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         tournamentService.checkTournamentOpen(tournament);
         registrationRepository.delete(registration);
         if (!registration.isReserveList()) {
-            promotePlayerRegistration(tournament.getId());
-
+            promotion = promotePlayerRegistration(tournament.getId());
         }
-        return new GeneralResponse(registration.getPlayer().getNickname() + " registration deleted.");
-    } //cuidado en el proceso hay doble tournament save!!!
+        String message = promotion?" registration deleted and first player on reserve list promoted.":" registration deleted.";
+        return new GeneralResponse(registration.getPlayer().getNickname() + message);
+    }
 
     @Override
     public RegistrationsResponse getAllRegistrations(UUID tournamentId) {
@@ -84,19 +86,21 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Transactional
     @Override
-    public void promotePlayerRegistration(UUID tournamentId) {
+    public boolean promotePlayerRegistration(UUID tournamentId) {
+        boolean promotion;
         Optional<Registration> firstReserve = registrationRepository.findFirstByTournamentIdAndReserveListTrueOrderByRegisteredAtAsc(tournamentId);
         if (firstReserve.isPresent()) {
             Registration promoted = firstReserve.get();
             promoted.setReserveList(false);
             promoted.setRegisteredAt(LocalDateTime.now());
             registrationRepository.save(promoted);
-        } else {
-            tournamentService.setTournamentNotFull(tournamentId);
-            int activePlayers = registrationRepository.countActivePlayersByTournamentId(tournamentId);
-            tournamentService.updatePrizeMoneyAndSpotsAvailable(tournamentId, activePlayers);
+            promotion = true;
+        }else{
+            promotion = false;
         }
-
+        int activePlayers = registrationRepository.countActivePlayersByTournamentId(tournamentId);
+        tournamentService.updatePrizeMoneyAndSpotsAvailable(tournamentId, activePlayers);
+    return promotion;
     }
 
     @Override

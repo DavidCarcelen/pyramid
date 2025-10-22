@@ -13,6 +13,6 @@ public interface RegistrationService {
     GeneralResponse deleteRegistration(User player, UUID registrationtId);
     RegistrationsResponse getAllRegistrations(UUID tournamentId);
     GeneralResponse markAsPaid (User store, UUID registrationId);
-    void promotePlayerRegistration(UUID tournamentId);
+    boolean promotePlayerRegistration(UUID tournamentId);
 
 }

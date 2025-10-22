@@ -1,3 +1,21 @@
+-- ===========================================
+-- CLEAN DATABASE BEFORE INSERTING INITIAL DATA
+-- ===========================================
+
+-- Disable referential integrity temporarily (only if needed)
+-- SET session_replication_role = 'replica';
+
+-- Clean tables (CASCADE ensures dependent data is also deleted)
+TRUNCATE TABLE registration, tournament, _user RESTART IDENTITY CASCADE;
+
+-- Re-enable referential integrity
+-- SET session_replication_role = 'origin';
+
+-- ===========================================
+-- INSERT INITIAL DATA
+-- ===========================================
+
+-- Users
 INSERT INTO _user (id, email, password, nickname, role)
 VALUES
     ('7b6f44b5-9c28-4a45-bc26-67c2f5d43101', 'serpi@example.com', '$2a$10$XY8nPLIhCQRsdg6kxb8Zp.2UHyXmh6QxJ3VLLJQopKvN4u2jRnFBi', 'Serpi', 'STORE'),
@@ -15,67 +33,65 @@ VALUES
     ('c7a9b5f1-2f44-49e2-b3ad-2f69e91a8c33', 'palmagema@example.com', '$2a$10$XY8nPLIhCQRsdg6kxb8Zp.2UHyXmh6QxJ3VLLJQopKvN4u2jRnFBi', 'Palmagema', 'PLAYER'),
     ('1e4f6c9d-8b2a-4f2e-9b33-7d4a1f5a9d60', 'pegaso@example.com', '$2a$10$XY8nPLIhCQRsdg6kxb8Zp.2UHyXmh6QxJ3VLLJQopKvN4u2jRnFBi', 'Pegaso', 'PLAYER');
 
+-- Tournaments
+INSERT INTO tournament (
+    id,
+    tournament_name,
+    start_date_time,
+    max_players,
+    format,
+    extra_info,
+    price,
+    prize_money,
+    open_tournament,
+    full_tournament,
+    organizer_id
+)
+VALUES
+    ('11111111-aaaa-4aaa-baaa-aaaaaaaaaaaa',
+     'Friday Night Magic - Pauper',
+     '2025-11-08T18:30:00',
+     32,
+     'Pauper',
+     'Classic Friday night event. 4 rounds. Prizes for top 4 players.',
+     5.00,
+     0.00,
+     true,
+     false,
+     '7b6f44b5-9c28-4a45-bc26-67c2f5d43101'),
 
-    -- Tournaments
-    INSERT INTO tournament (
-        id,
-        tournament_name,
-        start_date_time,
-        max_players,
-        format,
-        extra_info,
-        price,
-        prize_money,
-        open_tournament,
-        full_tournament,
-        organizer_id
-    )
-    VALUES
-        ('11111111-aaaa-4aaa-baaa-aaaaaaaaaaaa',
-         'Friday Night Magic - Pauper',
-         '2025-11-08T18:30:00',
-         32,
-         'Pauper',
-         'Classic Friday night event. 4 rounds. Prizes for top 4 players.',
-         5.00,
-         0.00,
-         true,
-         false,
-         '7b6f44b5-9c28-4a45-bc26-67c2f5d43101'), -- SerpiStore
+    ('22222222-bbbb-4bbb-bbbb-bbbbbbbbbbbb',
+     'Saturday Commander Clash',
+     '2025-11-09T17:00:00',
+     24,
+     'Commander',
+     'Bring your best decks! Multiplayer pods, casual format.',
+     10.00,
+     0.00,
+     true,
+     false,
+     '9b1a37ef-4b7a-4125-b589-94c79bdbbb02'),
 
-        ('22222222-bbbb-4bbb-bbbb-bbbbbbbbbbbb',
-         'Saturday Commander Clash',
-         '2025-11-09T17:00:00',
-         24,
-         'Commander',
-         'Bring your best decks! Multiplayer pods, casual format.',
-         10.00,
-         0.00,
-         true,
-         false,
-         '9b1a37ef-4b7a-4125-b589-94c79bdbbb02'), -- PaskuStore
+    ('33333333-cccc-4ccc-bccc-cccccccccccc',
+     'Modern Sunday Showdown',
+     '2025-11-16T11:00:00',
+     40,
+     'Modern',
+     'Competitive event. Swiss rounds + Top 8 cut. Store credit prizes.',
+     15.00,
+     0.00,
+     true,
+     false,
+     'de4e8a9c-0463-4c7e-b5a7-589d08c15a03'),
 
-        ('33333333-cccc-4ccc-bccc-cccccccccccc',
-         'Modern Sunday Showdown',
-         '2025-11-16T11:00:00',
-         40,
-         'Modern',
-         'Competitive event. Swiss rounds + Top 8 cut. Store credit prizes.',
-         15.00,
-         0.00,
-         true,
-         false,
-         'de4e8a9c-0463-4c7e-b5a7-589d08c15a03'), -- Hamelin
-
-        ('44444444-dddd-4ddd-bddd-dddddddddddd',
-         'Legacy League Week 1',
-         '2025-11-22T18:00:00',
-         20,
-         'Legacy',
-         'First week of our monthly Legacy league. Entry includes a free drink.',
-         12.00,
-         0.00,
-         true,
-         false,
-         'f8e3d67a-918c-45a8-8bbf-82d1d0d45c04'); -- elNucli
-
+    ('44444444-dddd-4ddd-bddd-dddddddddddd',
+     'Legacy League Week 1',
+     '2025-11-22T18:00:00',
+     20,
+     'Legacy',
+     'First week of our monthly Legacy league. Entry includes a free drink.',
+     12.00,
+     0.00,
+     true,
+     false,
+     'f8e3d67a-918c-45a8-8bbf-82d1d0d45c04');
