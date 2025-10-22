@@ -5,6 +5,7 @@ import com.dcin.pyramid.model.dto.SignUpRequest;
 import com.dcin.pyramid.model.dto.UserDTO;
 import com.dcin.pyramid.model.entity.Role;
 import com.dcin.pyramid.model.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -14,5 +15,6 @@ public interface UserService {
     GeneralResponse deleteUser(User user);
     User getUserById(UUID userId);
     UserDTO getUserDTO(User user);
+    GeneralResponse uploadProfilePicture(User user, MultipartFile file);
 
 }

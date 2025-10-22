@@ -7,8 +7,10 @@ import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,19 +19,25 @@ public class UserController {
     private final UserService userService;
 
     @PutMapping("/update")
-    public GeneralResponse updateUser(@AuthenticationPrincipal User user,
+    public ResponseEntity<GeneralResponse> updateUser(@AuthenticationPrincipal User user,
                                       @Valid @RequestBody SignUpRequest request) {
-        return userService.updateUser(user, request);
+        return ResponseEntity.ok(userService.updateUser(user, request));
     }
 
     @DeleteMapping("/delete")
-    public GeneralResponse deleteUser(@AuthenticationPrincipal User user) {
+    public ResponseEntity<GeneralResponse> deleteUser(@AuthenticationPrincipal User user) {
 
-        return userService.deleteUser(user);
+        return ResponseEntity.ok(userService.deleteUser(user));
     }
 
     @GetMapping ("/myProfile")
-    public UserDTO myProfile (@AuthenticationPrincipal User user){
-        return userService.getUserDTO(user);
+    public ResponseEntity<UserDTO> myProfile (@AuthenticationPrincipal User user){
+        return ResponseEntity.ok(userService.getUserDTO(user));
+    }
+
+    @PatchMapping("/profilePicture")
+    public ResponseEntity<GeneralResponse> uploadProfilePicture(@AuthenticationPrincipal User user,
+                                                                @RequestParam("file")MultipartFile file){
+        return ResponseEntity.ok(userService.uploadProfilePicture(user, file));
     }
 }

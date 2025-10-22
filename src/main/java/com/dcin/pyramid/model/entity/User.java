@@ -35,6 +35,13 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team;
+
+    @Column
+    private String profilePictureUrl;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

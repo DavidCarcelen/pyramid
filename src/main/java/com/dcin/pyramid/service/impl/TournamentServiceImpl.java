@@ -76,7 +76,7 @@ public class TournamentServiceImpl implements TournamentService {
         tournamentToUpdate.setOpenTournament(request.openTournament());
         tournamentToUpdate.setCompanionCode(request.companionCode());
         tournamentRepository.save(tournamentToUpdate);
-        updateMaxPlayers(user, tournamentId, request.maxPlayers());
+        updateMaxPlayers(user, tournamentId, request.maxPlayers());// cuidado tira excepcion despues de save
 
         return new SingleTournamentResponse("Tournament updated", tournamentMapper.toDTO(tournamentToUpdate));
     }
@@ -185,8 +185,9 @@ public class TournamentServiceImpl implements TournamentService {
             throw new UnauthorizedActionException("Only the tournament organizer can finish this tournament.");
         }
         tournament.setFinished(true);
-
-        return new GeneralResponse("Tournament finished");
+        tournament.setOpenTournament(false);
+        tournamentRepository.save(tournament);
+        return new GeneralResponse("Tournament finished, total prize = " + tournament.getPrizeMoney());
     }
 
 }
