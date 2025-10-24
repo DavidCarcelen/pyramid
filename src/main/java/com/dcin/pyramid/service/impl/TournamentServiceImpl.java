@@ -12,6 +12,7 @@ import com.dcin.pyramid.repository.TournamentRepository;
 import com.dcin.pyramid.service.RegistrationService;
 import com.dcin.pyramid.service.TournamentService;
 import com.dcin.pyramid.service.UserService;
+import com.dcin.pyramid.util.TournamentUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,13 @@ public class TournamentServiceImpl implements TournamentService {
     private final UserService userService;
     private final TournamentMapper tournamentMapper;
     private final RegistrationService registrationService;
+    private final TournamentUtils tournamentUtils;
+
+    @Override
+    public Tournament getTournamentById(UUID tournamentId) {
+        return tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new EntityNotFoundException("Tournament not found."));
+    }
 
     @Transactional
     @Override
@@ -67,9 +75,10 @@ public class TournamentServiceImpl implements TournamentService {
     @Override
     public SingleTournamentResponse updateTournament(TournamentRequest request, User user, UUID tournamentId) {
         Tournament tournamentToUpdate = getTournamentById(tournamentId);
+        tournamentUtils.checkUserOrganizer(user, tournamentToUpdate.getOrganizer());
         tournamentToUpdate.setTournamentName(request.tournamentName());
         tournamentToUpdate.setStartDateTime(request.startDateTime());
-        //tournamentToUpdate.setMaxPlayers(request.maxPlayers());
+        //tournamentToUpdate.setMaxPlayers(request.maxPlayers()); // mirar bien esto, tournament request lo envia
         tournamentToUpdate.setFormat(request.format());
         tournamentToUpdate.setExtraInfo(request.extraInfo());
         tournamentToUpdate.setPrice(request.price());
@@ -84,6 +93,7 @@ public class TournamentServiceImpl implements TournamentService {
     @Override
     public GeneralResponse deleteTournament(User user, UUID tournamentId) {
         Tournament tournamentToDelete = getTournamentById(tournamentId);
+        tournamentUtils.checkUserOrganizer(user, tournamentToDelete.getOrganizer());
         tournamentRepository.delete(tournamentToDelete);
         return new GeneralResponse("Tournament deleted");
     }
@@ -96,11 +106,7 @@ public class TournamentServiceImpl implements TournamentService {
         return new TournamentsResponse("Tournaments history: ", dtoList);
     }
 
-    @Override
-    public Tournament getTournamentById(UUID tournamentId) {
-        return tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new EntityNotFoundException("tournament not found."));
-    }
+
 
     @Override
     public void updatePrizeMoneyAndSpotsAvailable(UUID tournamentId, int activePlayers) {
@@ -110,33 +116,14 @@ public class TournamentServiceImpl implements TournamentService {
         tournamentRepository.save(tournament);
     }
 
-    /*@Override
-    public void setTournamentNotFull(UUID tournamentId) {
-        Tournament tournament = getTournamentById(tournamentId);
-        tournament.setFullTournament(false);
-        tournamentRepository.save(tournament);
-    }*/
-
-    @Override
-    public void checkTournamentOpen(Tournament tournament) {
-        if (LocalDateTime.now().isAfter(tournament.getStartDateTime())) {
-            tournament.setOpenTournament(false);
-            tournamentRepository.save(tournament);
-        }
-        if (!tournament.isOpenTournament()) {
-            throw new ClosedTournamentException();
-        }
-    }
 
     @Override
     public GeneralResponse openCloseTournament(User user, UUID tournamentId, boolean state) {
         Tournament tournament = getTournamentById(tournamentId);
-        if(!user.equals(tournament.getOrganizer())){
-            throw new UnauthorizedActionException("Only for the tournament organizer.");
-        }
+        tournamentUtils.checkUserOrganizer(user, tournament.getOrganizer());
         tournament.setOpenTournament(state);
         tournamentRepository.save(tournament);
-        String message = state? "open." : "closed.";
+        String message = state ? "open." : "closed.";
         return new GeneralResponse("Tournament registrations " + message);
     }
 
@@ -149,9 +136,8 @@ public class TournamentServiceImpl implements TournamentService {
     @Override
     public GeneralResponse addCompanionCode(User user, UUID tournamentId, String companionCode) {
         Tournament tournament = getTournamentById(tournamentId);
-        if(!user.equals(tournament.getOrganizer())){
-            throw new UnauthorizedActionException("Only for the tournament organizer.");
-        }
+        tournamentUtils.checkUserOrganizer(user, tournament.getOrganizer());
+        tournamentUtils.checkTournamentFinished(tournament);
         tournament.setCompanionCode(companionCode);
         tournamentRepository.save(tournament);
         return new GeneralResponse("Companion code added successfully  ");
@@ -160,18 +146,17 @@ public class TournamentServiceImpl implements TournamentService {
     @Override
     public GeneralResponse updateMaxPlayers(User user, UUID tournamentId, int newMaxPlayers) {
         Tournament tournament = getTournamentById(tournamentId);
-        if(!user.equals(tournament.getOrganizer())){
-            throw new UnauthorizedActionException("Only the tournament organizer can modify player spots.");
-        }
+        tournamentUtils.checkUserOrganizer(user, tournament.getOrganizer());
+        tournamentUtils.checkTournamentFinished(tournament);
         int activePlayers = (int) tournament.getRegistrations().stream().filter(r -> !r.isReserveList()).count();
-        if(newMaxPlayers < activePlayers){
+        if (newMaxPlayers < activePlayers) {
             throw new UnauthorizedActionException("Can't set maxPlayers to less than current active players (" + activePlayers + ").");
         }
         tournament.setMaxPlayers(newMaxPlayers);
         tournamentRepository.save(tournament);
 
         boolean promotion = true;
-        while(!tournament.isFullTournament() && promotion){
+        while (!tournament.isFullTournament() && promotion) {
             promotion = registrationService.promotePlayerRegistration(tournamentId);
             tournament = getTournamentById(tournamentId);
         }
@@ -181,8 +166,9 @@ public class TournamentServiceImpl implements TournamentService {
     @Override
     public GeneralResponse finishTournament(User user, UUID tournamentId) {
         Tournament tournament = getTournamentById(tournamentId);
-        if(!user.equals(tournament.getOrganizer())){
-            throw new UnauthorizedActionException("Only the tournament organizer can finish this tournament.");
+        tournamentUtils.checkUserOrganizer(user, tournament.getOrganizer());
+        if (tournament.getStartDateTime().isAfter(LocalDateTime.now())) {
+            throw new UnauthorizedActionException("Can't finish this tournament, It haven't started yet");
         }
         tournament.setFinished(true);
         tournament.setOpenTournament(false);

@@ -14,6 +14,7 @@ import com.dcin.pyramid.model.mappers.RegistrationMapper;
 import com.dcin.pyramid.repository.RegistrationRepository;
 import com.dcin.pyramid.service.RegistrationService;
 import com.dcin.pyramid.service.TournamentService;
+import com.dcin.pyramid.util.TournamentUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,14 +31,21 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final TournamentService tournamentService;
     private final RegistrationMapper registrationMapper;
+    private final TournamentUtils tournamentUtils;
+
+    private Registration getRegistrationById(UUID registrationId) {
+        return registrationRepository.findById(registrationId)
+                .orElseThrow(() -> new EntityNotFoundException("Registration not found."));
+    }
 
     @Override
     public RegistrationsResponse handleRegistration(User player, UUID tournamentId) {
-        if (registrationRepository.existsByPlayerIdAndTournamentId(player.getId(), tournamentId)) {
-            throw new UserAlreadyRegisteredException("Player already registered for this tournament!");
-        }
         Tournament tournament = tournamentService.getTournamentById(tournamentId);
-        tournamentService.checkTournamentOpen(tournament);
+        tournamentUtils.checkTournamentFinished(tournament);
+        tournamentUtils.checkTournamentOpen(tournament);
+        if (registrationRepository.existsByPlayerIdAndTournamentId(player.getId(), tournamentId)) {
+            throw new UserAlreadyRegisteredException("Player already registered for this tournament!"); // better this database consultation or get method on entity filter etc
+        }
         RegistrationsResponse response = tournament.isFullTournament() ?
                 newRegistration(player, tournament, true) :
                 newRegistration(player, tournament, false);
@@ -60,19 +68,19 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public GeneralResponse deleteRegistration(User user, UUID registrationId) {
         boolean promotion = false;
-        Registration registration = registrationRepository.findById(registrationId)
-                .orElseThrow(() -> new EntityNotFoundException("Registration not found!"));
+        Registration registration = getRegistrationById(registrationId);
         Tournament tournament = registration.getTournament();
+        tournamentUtils.checkTournamentOpen(tournament);
+        tournamentUtils.checkTournamentFinished(tournament);
 
         if (!registration.getPlayer().equals(user) && !tournament.getOrganizer().equals(user)) {
             throw new UnauthorizedActionException("Can't delete others registrations.");
         }
-        tournamentService.checkTournamentOpen(tournament);
         registrationRepository.delete(registration);
         if (!registration.isReserveList()) {
             promotion = promotePlayerRegistration(tournament.getId());
         }
-        String message = promotion?" registration deleted and first player on reserve list promoted.":" registration deleted.";
+        String message = promotion ? " registration deleted and first player on reserve list promoted." : " registration deleted.";
         return new GeneralResponse(registration.getPlayer().getNickname() + message);
     }
 
@@ -95,28 +103,28 @@ public class RegistrationServiceImpl implements RegistrationService {
             promoted.setRegisteredAt(LocalDateTime.now());
             registrationRepository.save(promoted);
             promotion = true;
-        }else{
+        } else {
             promotion = false;
         }
         int activePlayers = registrationRepository.countActivePlayersByTournamentId(tournamentId);
         tournamentService.updatePrizeMoneyAndSpotsAvailable(tournamentId, activePlayers);
-    return promotion;
+        return promotion;
     }
 
     @Override
     public GeneralResponse markAsPaid(User store, UUID registrationId) {
-        Registration registration = registrationRepository.findById(registrationId)
-                .orElseThrow(() -> new EntityNotFoundException("Registration not found"));
+        Registration registration = getRegistrationById(registrationId);
         Tournament tournament = registration.getTournament();
-        if (!tournament.getOrganizer().equals(store)) {
-            throw new UnauthorizedActionException("Only the organizer can mark registrations as paid.");
-        }
+        tournamentUtils.checkUserOrganizer(store, tournament.getOrganizer());
+        String message;
         if (registration.isPaid()) {
-            return new GeneralResponse(registration.getPlayer().getNickname() + " is already marked as paid.");
+            message = " is already marked as paid.";
+        } else {
+            registration.setPaid(true);
+            registrationRepository.save(registration);
+            message = " registration marked as paid.";
         }
-        registration.setPaid(true);
-        registrationRepository.save(registration);
-        return new GeneralResponse(registration.getPlayer().getNickname() + " registration marked as paid.");
+        return new GeneralResponse(registration.getPlayer().getNickname() + message);
     }
 
 }

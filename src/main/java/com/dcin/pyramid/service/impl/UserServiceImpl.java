@@ -76,27 +76,42 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public GeneralResponse uploadProfilePicture(User user, MultipartFile file) {
-        // Build file path (use UUID to avoid duplicates)
-        String fileName = user.getId() + "_" + file.getOriginalFilename();
-        Path filePath = Paths.get(UPLOAD_DIR, fileName);
-
         try {
-            // Save file locally
+            // Case 1: No file in the request → remove current picture
+            if (file == null || file.isEmpty()) {
+                if (user.getProfilePictureUrl() != null) {
+                    // Delete the old file from disk
+                    Path oldFilePath = Paths.get(user.getProfilePictureUrl().replace("/uploads/", UPLOAD_DIR));
+                    Files.deleteIfExists(oldFilePath);
+                }
+
+                user.setProfilePictureUrl(null);
+                userRepository.save(user);
+                return new GeneralResponse("Profile picture removed successfully!");
+            }
+
+            // Case 2: File provided → replace or add new picture
+            // Remove old one first (if exists)
+            if (user.getProfilePictureUrl() != null) {
+                Path oldFilePath = Paths.get(user.getProfilePictureUrl().replace("/uploads/", UPLOAD_DIR));
+                Files.deleteIfExists(oldFilePath);
+            }
+
+            // Build new file name and save it
+            String fileName = user.getId() + "_" + file.getOriginalFilename();
+            Path filePath = Paths.get(UPLOAD_DIR, fileName);
             Files.write(filePath, file.getBytes());
 
-            // Build file URL (this assumes you’ll serve static resources from /uploads)
-            String fileUrl = "/uploads/" + fileName;
-
-            // Update user
+            // Update user record
+            String fileUrl = "/uploads/" + fileName; // used when serving static files
             user.setProfilePictureUrl(fileUrl);
             userRepository.save(user);
 
             return new GeneralResponse("Profile picture uploaded successfully!");
         } catch (IOException e) {
-            throw new RuntimeException("Error saving profile picture: " + e.getMessage());
+            throw new RuntimeException("Error handling profile picture: " + e.getMessage());
         }
-
-
     }
+
 
 }
