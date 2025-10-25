@@ -25,8 +25,6 @@ public interface TournamentService {
     SingleTournamentResponse getOneTournament(UUID tournamentId);
     GeneralResponse addCompanionCode(User user,UUID tournamentId, String companionCode);
 
-    GeneralResponse updateMaxPlayers(User user, UUID tournamentId, int newMaxPlayers);
-
     GeneralResponse finishTournament(User user, UUID tournamentId);
 
     Tournament getTournamentById(UUID tournamentId);

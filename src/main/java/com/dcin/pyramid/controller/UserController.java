@@ -21,7 +21,6 @@ import java.util.UUID;
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
-    private final TeamService teamService;
 
     @PutMapping("/update")
     public ResponseEntity<GeneralResponse> updateUser(@AuthenticationPrincipal User user,

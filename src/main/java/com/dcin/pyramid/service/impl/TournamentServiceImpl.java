@@ -1,24 +1,19 @@
 package com.dcin.pyramid.service.impl;
 
-import com.dcin.pyramid.exception.ClosedTournamentException;
 import com.dcin.pyramid.exception.EntityNotFoundException;
 import com.dcin.pyramid.exception.UnauthorizedActionException;
 import com.dcin.pyramid.model.dto.*;
-import com.dcin.pyramid.model.entity.Registration;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.model.mappers.TournamentMapper;
 import com.dcin.pyramid.repository.TournamentRepository;
-import com.dcin.pyramid.service.RegistrationService;
 import com.dcin.pyramid.service.TournamentService;
-import com.dcin.pyramid.service.UserService;
 import com.dcin.pyramid.util.TournamentUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -28,9 +23,7 @@ import java.util.UUID;
 public class TournamentServiceImpl implements TournamentService {
 
     private final TournamentRepository tournamentRepository;
-    private final UserService userService;
     private final TournamentMapper tournamentMapper;
-    private final RegistrationService registrationService;
     private final TournamentUtils tournamentUtils;
 
     @Override
@@ -78,14 +71,13 @@ public class TournamentServiceImpl implements TournamentService {
         tournamentUtils.checkUserOrganizer(user, tournamentToUpdate.getOrganizer());
         tournamentToUpdate.setTournamentName(request.tournamentName());
         tournamentToUpdate.setStartDateTime(request.startDateTime());
-        //tournamentToUpdate.setMaxPlayers(request.maxPlayers()); // mirar bien esto, tournament request lo envia
+        tournamentToUpdate.setMaxPlayers(request.maxPlayers()); // mirar bien esto, cuidado con el metodo y registrations
         tournamentToUpdate.setFormat(request.format());
         tournamentToUpdate.setExtraInfo(request.extraInfo());
         tournamentToUpdate.setPrice(request.price());
         tournamentToUpdate.setOpenTournament(request.openTournament());
         tournamentToUpdate.setCompanionCode(request.companionCode());
         tournamentRepository.save(tournamentToUpdate);
-        updateMaxPlayers(user, tournamentId, request.maxPlayers());// cuidado tira excepcion despues de save
 
         return new SingleTournamentResponse("Tournament updated", tournamentMapper.toDTO(tournamentToUpdate));
     }
@@ -141,26 +133,6 @@ public class TournamentServiceImpl implements TournamentService {
         tournament.setCompanionCode(companionCode);
         tournamentRepository.save(tournament);
         return new GeneralResponse("Companion code added successfully  ");
-    }
-
-    @Override
-    public GeneralResponse updateMaxPlayers(User user, UUID tournamentId, int newMaxPlayers) {
-        Tournament tournament = getTournamentById(tournamentId);
-        tournamentUtils.checkUserOrganizer(user, tournament.getOrganizer());
-        tournamentUtils.checkTournamentFinished(tournament);
-        int activePlayers = (int) tournament.getRegistrations().stream().filter(r -> !r.isReserveList()).count();
-        if (newMaxPlayers < activePlayers) {
-            throw new UnauthorizedActionException("Can't set maxPlayers to less than current active players (" + activePlayers + ").");
-        }
-        tournament.setMaxPlayers(newMaxPlayers);
-        tournamentRepository.save(tournament);
-
-        boolean promotion = true;
-        while (!tournament.isFullTournament() && promotion) {
-            promotion = registrationService.promotePlayerRegistration(tournamentId);
-            tournament = getTournamentById(tournamentId);
-        }
-        return new GeneralResponse("MaxPlayers updated");
     }
 
     @Override

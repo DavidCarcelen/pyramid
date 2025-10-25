@@ -1,7 +1,6 @@
 package com.dcin.pyramid.service.impl;
 
 import com.dcin.pyramid.exception.InvalidTeamOperationException;
-import com.dcin.pyramid.exception.UnauthorizedActionException;
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.TeamRequest;
 import com.dcin.pyramid.model.entity.Team;

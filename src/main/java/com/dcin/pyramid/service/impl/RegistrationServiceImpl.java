@@ -1,6 +1,5 @@
 package com.dcin.pyramid.service.impl;
 
-import com.dcin.pyramid.exception.BadCredentialsException;
 import com.dcin.pyramid.exception.UnauthorizedActionException;
 import com.dcin.pyramid.exception.UserAlreadyRegisteredException;
 import com.dcin.pyramid.exception.EntityNotFoundException;
@@ -10,7 +9,6 @@ import com.dcin.pyramid.model.dto.RegistrationsResponse;
 import com.dcin.pyramid.model.entity.Registration;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
-import com.dcin.pyramid.model.mappers.RegistrationMapper;
 import com.dcin.pyramid.repository.RegistrationRepository;
 import com.dcin.pyramid.service.RegistrationService;
 import com.dcin.pyramid.service.TournamentService;
@@ -19,7 +17,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +27,6 @@ import java.util.UUID;
 public class RegistrationServiceImpl implements RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final TournamentService tournamentService;
-    private final RegistrationMapper registrationMapper;
     private final TournamentUtils tournamentUtils;
 
     private Registration getRegistrationById(UUID registrationId) {

@@ -7,6 +7,7 @@ import com.dcin.pyramid.model.dto.TournamentsResponse;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.service.TournamentService;
+import com.dcin.pyramid.service.impl.TournamentRegistrationCoordinator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TournamentController {
     private final TournamentService tournamentService;
+    private final TournamentRegistrationCoordinator tournamentRegistrationCoordinator;
 
     @PreAuthorize("hasRole('STORE')")
     @PostMapping("/store/new")
@@ -71,7 +73,7 @@ public class TournamentController {
     public ResponseEntity<GeneralResponse> updateMaxPlayers(@AuthenticationPrincipal User user,
                                                             @PathVariable UUID tournamentId,
                                                             @RequestParam int newMaxPlayers) {
-        return ResponseEntity.ok(tournamentService.updateMaxPlayers(user, tournamentId, newMaxPlayers));
+        return ResponseEntity.ok(tournamentRegistrationCoordinator.updateMaxPlayers(user, tournamentId, newMaxPlayers));
     }
 
     @PreAuthorize("hasRole('STORE')")
