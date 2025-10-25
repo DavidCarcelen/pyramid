@@ -50,6 +50,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorMessage> unauthorizedActionException (UnauthorizedActionException exception, WebRequest request){
         return buildErrorResponse(exception, HttpStatus.UNAUTHORIZED, request);
     }
+    @ExceptionHandler(InvalidTeamOperationException.class)
+    public ResponseEntity<ErrorMessage> invalidTeamOperationException (InvalidTeamOperationException exception, WebRequest request){
+        return buildErrorResponse(exception, HttpStatus.CONFLICT, request);
+    }
 
     private ResponseEntity<ErrorMessage> buildErrorResponse(Exception ex, HttpStatus status, WebRequest request){
         ErrorMessage errorMessage = ErrorMessage.builder()

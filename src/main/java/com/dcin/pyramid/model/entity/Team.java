@@ -21,8 +21,11 @@ public class Team {
     @GeneratedValue
     private UUID id;
     @Column(nullable = false, unique = true)
-    private String name;
-    @ManyToOne(optional = false)
+    private String teamName;
+    @Column (length = 8, unique = true)
+    private String teamEmoji;
+    @OneToOne
+    @JoinColumn(nullable = false)
     private User founder;
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<User> members = new ArrayList<>();

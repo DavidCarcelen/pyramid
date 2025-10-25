@@ -29,6 +29,7 @@ public interface RegistrationRepository extends JpaRepository<Registration, UUID
     SELECT new com.dcin.pyramid.model.dto.RegistrationInfoDTO(
         r.id,
         r.player.nickname,
+        r.player.team.teamEmoji,
         r.reserveList,
         r.registeredAt
     )
@@ -40,10 +41,6 @@ public interface RegistrationRepository extends JpaRepository<Registration, UUID
 
     @Query("SELECT COUNT(r) FROM Registration r WHERE r.tournament.id = :tournamentId AND r.reserveList = false")
     int countActivePlayersByTournamentId(UUID tournamentId);
-
-
-
-
 
 
 }
