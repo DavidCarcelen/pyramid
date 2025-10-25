@@ -30,7 +30,7 @@ public class TournamentController {
     }
 
     @PreAuthorize("hasRole('STORE')")
-    @GetMapping("/store/myTournaments")
+    @GetMapping("/store/my-tournaments")
     public ResponseEntity<TournamentsResponse> getAllMyTournaments(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(tournamentService.getAllTournaments(user.getId()));
     }
@@ -51,7 +51,7 @@ public class TournamentController {
     }
 
     @PreAuthorize("hasRole('STORE')")
-    @PatchMapping("/store/{tournamentId}")
+    @PatchMapping("/store/state/{tournamentId}")
     public ResponseEntity<GeneralResponse> setTournamentState(@AuthenticationPrincipal User user,
                                                               @PathVariable UUID tournamentId,
                                                               @RequestParam boolean openTournament) {
@@ -67,7 +67,7 @@ public class TournamentController {
     }
 
     @PreAuthorize("hasRole('STORE')")
-    @PatchMapping("/store/updateMaxPlayers/{tournamentId}")
+    @PatchMapping("/store/update-max-players/{tournamentId}")
     public ResponseEntity<GeneralResponse> updateMaxPlayers(@AuthenticationPrincipal User user,
                                                             @PathVariable UUID tournamentId,
                                                             @RequestParam int newMaxPlayers) {
@@ -75,19 +75,19 @@ public class TournamentController {
     }
 
     @PreAuthorize("hasRole('STORE')")
-    @PatchMapping("/store/finishTournament/{tournamentId}")
+    @PatchMapping("/store/finish-tournament/{tournamentId}")
     public ResponseEntity<GeneralResponse> finishTournament(@AuthenticationPrincipal User user,
                                                             @PathVariable UUID tournamentId) {
         return ResponseEntity.ok(tournamentService.finishTournament(user, tournamentId));
     }
 
-    @GetMapping("/upcomingTournaments")
+    @GetMapping("/upcoming-tournaments")
     public ResponseEntity<TournamentsResponse> getUpcomingTournamentsByStore(@RequestParam(required = false) UUID storeId) {
 
         return ResponseEntity.ok(tournamentService.getUpcomingTournamentsByStore(storeId));
     }
 
-    @GetMapping("/getOneTournament/{tournamentId}")
+    @GetMapping("/get-one-tournament/{tournamentId}")
     public ResponseEntity<SingleTournamentResponse> getOneTournament(@PathVariable UUID tournamentId) {
 
         return ResponseEntity.ok(tournamentService.getOneTournament(tournamentId));

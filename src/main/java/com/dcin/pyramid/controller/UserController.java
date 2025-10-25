@@ -14,6 +14,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
@@ -33,19 +35,15 @@ public class UserController {
         return ResponseEntity.ok(userService.deleteUser(user));
     }
 
-    @GetMapping ("/myProfile")
+    @GetMapping ("/my-profile")
     public ResponseEntity<UserDTO> myProfile (@AuthenticationPrincipal User user){
         return ResponseEntity.ok(userService.getUserDTO(user));
     }
 
-    @PatchMapping("/profilePicture")
+    @PatchMapping("/profile-picture")
     public ResponseEntity<GeneralResponse> uploadProfilePicture(@AuthenticationPrincipal User user,
                                                                 @RequestParam("file")MultipartFile file){
         return ResponseEntity.ok(userService.uploadProfilePicture(user, file));
     }
 
-    @PostMapping("/team")
-    public ResponseEntity<GeneralResponse>createTeam(@AuthenticationPrincipal User user,@RequestBody TeamRequest teamRequest){
-        return ResponseEntity.ok(teamService.createTeam(user, teamRequest));
-    }
 }
