@@ -57,8 +57,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public GeneralResponse deleteUser(User user) {
-        User userToDelete = getUserById(user.getId());
-        userRepository.delete(userToDelete);
+        //User userToDelete = getUserById(user.getId());
+        userRepository.delete(user);
         return new GeneralResponse("User deleted!");
     }
 
