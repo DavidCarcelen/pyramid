@@ -5,11 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record SignUpRequest(
-        @NotBlank(message = "Email required")//check registered
+        @NotBlank(message = "Email required")
         String email,
         @NotBlank(message = "Password required")
         String password,
-        @NotBlank(message = "Nickname required")//check registered
+        @NotBlank(message = "Nickname required")
         String nickname,
         @NotNull(message = "Role is required")
         Role role) {

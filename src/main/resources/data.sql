@@ -15,7 +15,7 @@ TRUNCATE TABLE registration, tournament, _user RESTART IDENTITY CASCADE;
 -- INSERT INITIAL DATA
 -- ===========================================
 
--- Users
+-- USERS
 INSERT INTO _user (id, email, password, nickname, role)
 VALUES
     ('7b6f44b5-9c28-4a45-bc26-67c2f5d43101', 'serpi@example.com', '$2a$10$XY8nPLIhCQRsdg6kxb8Zp.2UHyXmh6QxJ3VLLJQopKvN4u2jRnFBi', 'Serpi', 'STORE'),
@@ -33,7 +33,7 @@ VALUES
     ('c7a9b5f1-2f44-49e2-b3ad-2f69e91a8c33', 'palmagema@example.com', '$2a$10$XY8nPLIhCQRsdg6kxb8Zp.2UHyXmh6QxJ3VLLJQopKvN4u2jRnFBi', 'Palmagema', 'PLAYER'),
     ('1e4f6c9d-8b2a-4f2e-9b33-7d4a1f5a9d60', 'pegaso@example.com', '$2a$10$XY8nPLIhCQRsdg6kxb8Zp.2UHyXmh6QxJ3VLLJQopKvN4u2jRnFBi', 'Pegaso', 'PLAYER');
 
--- Tournaments
+-- TOURNAMENTS
 INSERT INTO tournament (
     id,
     tournament_name,
@@ -43,9 +43,11 @@ INSERT INTO tournament (
     extra_info,
     price,
     prize_money,
+    organizer_id,
+    companion_code,
     open_tournament,
     full_tournament,
-    organizer_id
+    finished
 )
 VALUES
     ('11111111-aaaa-4aaa-baaa-aaaaaaaaaaaa',
@@ -56,9 +58,11 @@ VALUES
      'Classic Friday night event. 4 rounds. Prizes for top 4 players.',
      5.00,
      0.00,
+     '7b6f44b5-9c28-4a45-bc26-67c2f5d43101',
+     'coMP4Ni0n',
      true,
      false,
-     '7b6f44b5-9c28-4a45-bc26-67c2f5d43101'),
+     false),
 
     ('22222222-bbbb-4bbb-bbbb-bbbbbbbbbbbb',
      'Saturday Commander Clash',
@@ -68,9 +72,11 @@ VALUES
      'Bring your best decks! Multiplayer pods, casual format.',
      10.00,
      0.00,
+     '9b1a37ef-4b7a-4125-b589-94c79bdbbb02',
+     'CoDeP4skU',
      true,
      false,
-     '9b1a37ef-4b7a-4125-b589-94c79bdbbb02'),
+     false),
 
     ('33333333-cccc-4ccc-bccc-cccccccccccc',
      'Modern Sunday Showdown',
@@ -80,9 +86,11 @@ VALUES
      'Competitive event. Swiss rounds + Top 8 cut. Store credit prizes.',
      15.00,
      0.00,
+     'de4e8a9c-0463-4c7e-b5a7-589d08c15a03',
+     'H4m3l1n',
      true,
      false,
-     'de4e8a9c-0463-4c7e-b5a7-589d08c15a03'),
+     false),
 
     ('44444444-dddd-4ddd-bddd-dddddddddddd',
      'Legacy League Week 1',
@@ -92,6 +100,8 @@ VALUES
      'First week of our monthly Legacy league. Entry includes a free drink.',
      12.00,
      0.00,
+     'f8e3d67a-918c-45a8-8bbf-82d1d0d45c04',
+     '3lNucl1',
      true,
      false,
-     'f8e3d67a-918c-45a8-8bbf-82d1d0d45c04');
+     false);

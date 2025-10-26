@@ -31,13 +31,13 @@ public class Tournament {
     private BigDecimal price;
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal prizeMoney = BigDecimal.ZERO;
-    private boolean openTournament;
-    private boolean fullTournament;
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
     private List<Registration> registrations;
     @ManyToOne
     @JoinColumn(nullable = false)
     private User organizer;
     private String companionCode;
-    private boolean finished;
+    private boolean openTournament;
+    private boolean fullTournament = false;
+    private boolean finished = false;
 }

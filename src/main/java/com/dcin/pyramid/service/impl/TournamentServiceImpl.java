@@ -58,7 +58,7 @@ public class TournamentServiceImpl implements TournamentService {
         } else {
             tournaments = tournamentRepository.findAllByStartDateTimeAfter(LocalDateTime.now());
         }
-        List<TournamentDTO> dtoList = tournaments.stream()
+        List<TournamentInfoDTO> dtoList = tournaments.stream()
                 .map(tournamentMapper::toDTO)
                 .toList();
         return new TournamentsResponse("Upcoming tournaments: ", dtoList);
@@ -92,7 +92,7 @@ public class TournamentServiceImpl implements TournamentService {
 
     @Override
     public TournamentsResponse getAllTournaments(UUID userId) {
-        List<TournamentDTO> dtoList = tournamentRepository.findByOrganizerId(userId).stream()
+        List<TournamentInfoDTO> dtoList = tournamentRepository.findByOrganizerId(userId).stream()
                 .map(tournamentMapper::toDTO)
                 .toList();
         return new TournamentsResponse("Tournaments history: ", dtoList);
@@ -140,7 +140,7 @@ public class TournamentServiceImpl implements TournamentService {
         Tournament tournament = getTournamentById(tournamentId);
         tournamentUtils.checkUserOrganizer(user, tournament.getOrganizer());
         if (tournament.getStartDateTime().isAfter(LocalDateTime.now())) {
-            throw new UnauthorizedActionException("Can't finish this tournament, It haven't started yet");
+            throw new UnauthorizedActionException("Can't finish this tournament, It hasn't started yet");
         }
         tournament.setFinished(true);
         tournament.setOpenTournament(false);

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record TournamentDTO (
+public record TournamentInfoDTO(
         UUID id,
         String tournamentName,
         LocalDateTime startDateTime,
@@ -12,7 +12,9 @@ public record TournamentDTO (
         String format,
         String extraInfo,
         BigDecimal price,
+        String organizerNickname,
+        String companionCode,
         boolean openTournament,
         boolean fullTournament,
-        String organizerNickname){
+        boolean finished){
 }
