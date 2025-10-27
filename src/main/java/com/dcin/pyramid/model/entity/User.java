@@ -17,9 +17,11 @@ import java.util.UUID;
 @Data
 @Builder
 @Table(name = "_user")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User implements UserDetails {
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     private UUID id;
 
     @Column(nullable = false, unique = true)

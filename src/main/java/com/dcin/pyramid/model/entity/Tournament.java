@@ -29,6 +29,7 @@ public class Tournament {
     private String extraInfo;
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
+    @Builder.Default
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal prizeMoney = BigDecimal.ZERO;
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
@@ -38,6 +39,8 @@ public class Tournament {
     private User organizer;
     private String companionCode;
     private boolean openTournament;
+    @Builder.Default
     private boolean fullTournament = false;
+    @Builder.Default
     private boolean finished = false;
 }

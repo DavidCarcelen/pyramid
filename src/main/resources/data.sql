@@ -53,7 +53,7 @@ VALUES
     ('11111111-aaaa-4aaa-baaa-aaaaaaaaaaaa',
      'Friday Night Magic - Pauper',
      '2025-11-08T18:30:00',
-     32,
+     4,
      'Pauper',
      'Classic Friday night event. 4 rounds. Prizes for top 4 players.',
      5.00,
@@ -105,3 +105,27 @@ VALUES
      true,
      false,
      false);
+
+     TRUNCATE TABLE registration RESTART IDENTITY CASCADE;
+
+     -- ===========================================
+     -- SAMPLE REGISTRATIONS (for Pauper tournament)
+     -- ===========================================
+
+     INSERT INTO registration (
+         id,
+         player_id,
+         tournament_id,
+         paid,
+         registered_at,
+         reserve_list
+     )
+     VALUES
+         ('aaa11111-aaaa-4aaa-baaa-aaaaaaaa0001', 'a1f6a9e0-3d47-4a3a-80e1-3b44f9baf111', '11111111-aaaa-4aaa-baaa-aaaaaaaaaaaa', true,  '2025-10-01T12:00:00', false),
+         ('aaa11111-aaaa-4aaa-baaa-aaaaaaaa0002', 'b2a7b9f1-2c58-4b2b-b9d2-1a22f8baf222', '11111111-aaaa-4aaa-baaa-aaaaaaaaaaaa', false, '2025-10-01T12:05:00', false),
+         ('aaa11111-aaaa-4aaa-baaa-aaaaaaaa0003', 'c3b8c1a2-1d69-4c3c-9ae3-2b33f9caf333', '11111111-aaaa-4aaa-baaa-aaaaaaaaaaaa', false, '2025-10-01T12:10:00', false),
+         ('aaa11111-aaaa-4aaa-baaa-aaaaaaaa0004', 'd4c9d2b3-0e7a-4d4d-a8f4-3c44f0dbf444', '11111111-aaaa-4aaa-baaa-aaaaaaaaaaaa', true,  '2025-10-01T12:15:00', false),
+         ('aaa11111-aaaa-4aaa-baaa-aaaaaaaa0005', 'e5dae3c4-ff8b-4e5e-b9f5-4d55f1ecf555', '11111111-aaaa-4aaa-baaa-aaaaaaaaaaaa', false, '2025-10-01T12:20:00', true),
+         ('aaa11111-aaaa-4aaa-baaa-aaaaaaaa0006', '9b2a4d8e-1d3c-4d7f-9a76-6b2c9e4cbb12', '11111111-aaaa-4aaa-baaa-aaaaaaaaaaaa', false, '2025-10-01T12:25:00', true);
+
+

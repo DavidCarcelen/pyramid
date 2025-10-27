@@ -13,6 +13,18 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    public static ErrorMessage buildError(HttpStatus status, String message, String path){
+        return new ErrorMessage(
+                status.value(),
+                LocalDateTime.now(),
+                message,
+                path
+        );
+    }
+    private ResponseEntity<ErrorMessage> buildErrorResponse(Exception ex, HttpStatus status, WebRequest request){
+        ErrorMessage errorMessage = buildError(status, ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorMessage, status);
+    }
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorMessage> userNotFoundException(EntityNotFoundException exception, WebRequest request){
         return buildErrorResponse(exception, HttpStatus.NOT_FOUND, request);
@@ -55,13 +67,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildErrorResponse(exception, HttpStatus.CONFLICT, request);
     }
 
-    private ResponseEntity<ErrorMessage> buildErrorResponse(Exception ex, HttpStatus status, WebRequest request){
-        ErrorMessage errorMessage = ErrorMessage.builder()
-                .status(status.value())
-                .timestamp(LocalDateTime.now())
-                .message(ex.getMessage())
-                .path(request.getDescription(false))
-                .build();
-        return new ResponseEntity<>(errorMessage, status);
-    }
+
 }

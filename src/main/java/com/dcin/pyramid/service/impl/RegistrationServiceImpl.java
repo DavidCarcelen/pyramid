@@ -40,7 +40,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         tournamentUtils.checkTournamentFinished(tournament);
         tournamentUtils.checkTournamentOpen(tournament);
         if (registrationRepository.existsByPlayerIdAndTournamentId(player.getId(), tournamentId)) {
-            throw new UserAlreadyRegisteredException("Player already registered for this tournament!"); // better this database consultation or get method on entity filter etc
+            throw new UserAlreadyRegisteredException("Player already registered for this tournament!");
         }
         RegistrationsResponse response = tournament.isFullTournament() ?
                 newRegistration(player, tournament, true) :
@@ -85,7 +85,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         List<RegistrationInfoDTO> registrations =
                 registrationRepository.findAllRegistrationsByTournamentIdOrdered(tournamentId);
         int activePlayers = registrationRepository.countActivePlayersByTournamentId(tournamentId);
-        return new RegistrationsResponse("All registrations:", registrations, activePlayers);
+        int reservePlayers = registrationRepository.countReserveListPlayersByTournamentId(tournamentId);
+        boolean full = reservePlayers > 0;
+        return new RegistrationsResponse("All registrations:", registrations, activePlayers, reservePlayers, full);
     }
 
     @Transactional

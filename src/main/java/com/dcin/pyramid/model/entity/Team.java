@@ -1,10 +1,7 @@
 package com.dcin.pyramid.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,9 +13,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Team {
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     private UUID id;
     @Column(nullable = false, unique = true)
     private String teamName;

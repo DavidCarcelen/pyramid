@@ -31,6 +31,8 @@ public class TournamentRegistrationCoordinator implements TournamentRegisntartio
         if (newMaxPlayers < activePlayers) {
             throw new UnauthorizedActionException("Can't set maxPlayers to less than current active players (" + activePlayers + ").");
         }
+        boolean full = newMaxPlayers == activePlayers?true:false;
+        tournament.setFullTournament(full);
         tournament.setMaxPlayers(newMaxPlayers);
         tournamentRepository.save(tournament);
 
