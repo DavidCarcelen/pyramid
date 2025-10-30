@@ -9,7 +9,7 @@ public class RegistrationMapper {
     public RegistrationInfoDTO toDto(Registration registration){
         return new RegistrationInfoDTO(
                 registration.getId(),
-                registration.getPlayer().getUserName(),
+                registration.getPlayer().getNickname(),
                 registration.getPlayer().getTeam().getTeamEmoji(),
                 registration.isReserveList(),
                 registration.getRegisteredAt()

@@ -4,9 +4,9 @@ import com.dcin.pyramid.exception.EntityNotFoundException;
 import com.dcin.pyramid.exception.RoleException;
 import com.dcin.pyramid.exception.UserAlreadyRegisteredException;
 import com.dcin.pyramid.model.dto.GeneralResponse;
-import com.dcin.pyramid.model.dto.auth.SignUpRequest;
-import com.dcin.pyramid.model.dto.UserDTO;
-import com.dcin.pyramid.model.dto.Role;
+import com.dcin.pyramid.model.dto.auth.PlayerSignUpRequest;
+import com.dcin.pyramid.model.dto.user.UserDTO;
+import com.dcin.pyramid.model.dto.auth.Role;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.model.mappers.UserMapper;
 import com.dcin.pyramid.repository.UserRepository;
@@ -32,23 +32,15 @@ public class UserServiceImpl implements UserService {
 
     private static final String UPLOAD_DIR = "uploads/";
 
-    @Override
-    public void checkUserRole(User user, Role role) {
-        if (user.getRole() != role) {
-            throw new RoleException(role.toString());
-        }
-    }
-
     @Transactional
     @Override
-    public GeneralResponse updateUser(User user, SignUpRequest request) {
+    public GeneralResponse updateUser(User user, PlayerSignUpRequest request) {
         User userToUpdate = getUserById(user.getId());
-        if (!request.nickname().equals(userToUpdate.getUserName()) && userRepository.existsByNickname(request.nickname())) {
+        if (!request.nickname().equals(userToUpdate.getNickname()) && userRepository.existsByNickname(request.nickname())) {
             throw new UserAlreadyRegisteredException("Nickname not available.");
         }
-        userToUpdate.setUserName(request.nickname());
+        userToUpdate.setNickname(request.nickname());
         userToUpdate.setPassword(passwordEncoder.encode(request.password()));
-        userToUpdate.setRole(request.role());
         userToUpdate.setEmail(request.email());
         userRepository.save(userToUpdate);
         return new GeneralResponse("User updated!");
@@ -56,7 +48,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public GeneralResponse deleteUser(User user) {
-        //User userToDelete = getUserById(user.getId());
         userRepository.delete(user);
         return new GeneralResponse("User deleted!");
     }

@@ -27,7 +27,7 @@ public class Registration {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private User player;
+    private Player player;
 
     @ManyToOne
     @JoinColumn(nullable = false)

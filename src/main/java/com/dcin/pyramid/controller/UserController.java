@@ -1,8 +1,12 @@
 package com.dcin.pyramid.controller;
 
 import com.dcin.pyramid.model.dto.GeneralResponse;
-import com.dcin.pyramid.model.dto.auth.SignUpRequest;
-import com.dcin.pyramid.model.dto.UserDTO;
+import com.dcin.pyramid.model.dto.auth.PlayerSignUpRequest;
+import com.dcin.pyramid.model.dto.user.PlayerDTO;
+import com.dcin.pyramid.model.dto.user.StoreDTO;
+import com.dcin.pyramid.model.dto.user.UserDTO;
+import com.dcin.pyramid.model.entity.Player;
+import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.service.UserService;
 import jakarta.validation.Valid;
@@ -20,7 +24,7 @@ public class UserController {
 
     @PutMapping("/update")
     public ResponseEntity<GeneralResponse> updateUser(@AuthenticationPrincipal User user,
-                                      @Valid @RequestBody SignUpRequest request) {
+                                      @Valid @RequestBody PlayerSignUpRequest request) {
         return ResponseEntity.ok(userService.updateUser(user, request));
     }
 
@@ -30,8 +34,9 @@ public class UserController {
         return ResponseEntity.ok(userService.deleteUser(user));
     }
 
-    @GetMapping ("/my-profile")
+    @GetMapping ("/my-profile")//okREF
     public ResponseEntity<UserDTO> myProfile (@AuthenticationPrincipal User user){
+
         return ResponseEntity.ok(userService.getUserDTO(user));
     }
 

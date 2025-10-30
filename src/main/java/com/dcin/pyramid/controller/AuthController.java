@@ -2,7 +2,8 @@ package com.dcin.pyramid.controller;
 
 import com.dcin.pyramid.model.dto.auth.JwtResponse;
 import com.dcin.pyramid.model.dto.auth.LoginRequest;
-import com.dcin.pyramid.model.dto.auth.SignUpRequest;
+import com.dcin.pyramid.model.dto.auth.PlayerSignUpRequest;
+import com.dcin.pyramid.model.dto.auth.StoreSignUpRequest;
 import com.dcin.pyramid.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    //one endpoint missing before signup to choose store or player
 
-    @PostMapping("/signup")
-    public ResponseEntity<JwtResponse> signup (@Valid @RequestBody SignUpRequest request){
-        return ResponseEntity.ok(authService.signup(request));
+    @PostMapping("/signup/player")
+    public ResponseEntity<JwtResponse> playerSignup (@Valid @RequestBody PlayerSignUpRequest request){
+        return ResponseEntity.ok(authService.playerSignup(request));
+    }
+    @PostMapping("/signup/store")
+    public ResponseEntity<JwtResponse> storeSignup (@Valid @RequestBody StoreSignUpRequest request){
+        return ResponseEntity.ok(authService.storeSignup(request));
     }
 
     @PostMapping("/login")

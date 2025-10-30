@@ -2,12 +2,9 @@ package com.dcin.pyramid.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 
@@ -15,24 +12,25 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @MappedSuperclass
+@SuperBuilder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public abstract class User implements UserDetails {
     @Id
     @GeneratedValue
     @EqualsAndHashCode.Include
-    private UUID id;
+    protected UUID id;
 
     @Column(nullable = false, unique = true)
-    private String email;
+    protected String email;
 
     @Column(nullable = false)
-    private String password;
+    protected String password;
 
     @Column(nullable = false, unique = true)
-    private String userName;
+    protected String nickname;
 
     @Column
-    private String profilePictureUrl;
+    protected String profilePictureUrl;
 
 
     @Override

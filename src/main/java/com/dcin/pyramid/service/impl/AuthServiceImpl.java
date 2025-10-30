@@ -3,8 +3,13 @@ package com.dcin.pyramid.service.impl;
 import com.dcin.pyramid.exception.UserAlreadyRegisteredException;
 import com.dcin.pyramid.model.dto.auth.JwtResponse;
 import com.dcin.pyramid.model.dto.auth.LoginRequest;
-import com.dcin.pyramid.model.dto.auth.SignUpRequest;
+import com.dcin.pyramid.model.dto.auth.PlayerSignUpRequest;
+import com.dcin.pyramid.model.dto.auth.StoreSignUpRequest;
+import com.dcin.pyramid.model.entity.Player;
+import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.model.entity.User;
+import com.dcin.pyramid.repository.PlayerRepository;
+import com.dcin.pyramid.repository.StoreRepository;
 import com.dcin.pyramid.repository.UserRepository;
 import com.dcin.pyramid.security.JwtProvider;
 import com.dcin.pyramid.service.AuthService;
@@ -22,6 +27,9 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PlayerRepository playerRepository;
+    private final StoreRepository storeRepository;
+
     @Override
     public JwtResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
@@ -31,24 +39,62 @@ public class AuthServiceImpl implements AuthService {
         return new JwtResponse(token);
     }
 
+    /*
+        @Override
+        public JwtResponse signup(PlayerSignUpRequest request) {//make two methods
+            userRepository.findByEmail(request.email())
+                    .ifPresent(user -> {
+                        throw new UserAlreadyRegisteredException();
+                    });
+            userRepository.findByNickname(request.nickname())
+                    .ifPresent(user -> {
+                        throw new UserAlreadyRegisteredException("Nickname not available.");
+                    });
+                User user = User.builder()
+                        .email(request.email())
+                        .password(passwordEncoder.encode(request.password()))
+                        .userName(request.nickname())
+                        .role(request.role())
+                        .build();
+                userRepository.save(user);
+                String token = jwtProvider.generateToken(user);
+            return new JwtResponse(token);
+        }*/
     @Override
-    public JwtResponse signup(SignUpRequest request) {
-        userRepository.findByEmail(request.email())
-                .ifPresent(user -> {
-                    throw new UserAlreadyRegisteredException();
-                });
-        userRepository.findByNickname(request.nickname())
-                .ifPresent(user -> {
-                    throw new UserAlreadyRegisteredException("Nickname not available.");
-                });
-            User user = User.builder()
-                    .email(request.email())
-                    .password(passwordEncoder.encode(request.password()))
-                    .userName(request.nickname())
-                    .role(request.role())
-                    .build();
-            userRepository.save(user);
-            String token = jwtProvider.generateToken(user);
+    public JwtResponse playerSignup(PlayerSignUpRequest request) {
+        if (playerRepository.existsByEmail(request.email())) {
+            throw new UserAlreadyRegisteredException();
+        }
+        if (playerRepository.existsByNickname(request.nickname())) {
+            throw new UserAlreadyRegisteredException("Nickname not available");
+        }
+        Player player = Player.builder()
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .nickname(request.nickname())
+                .build();
+        playerRepository.save(player);
+        String token = jwtProvider.generateToken(player);
+        return new JwtResponse(token);
+    }
+
+    @Override
+    public JwtResponse storeSignup(StoreSignUpRequest request) {
+        if (storeRepository.existsByEmail(request.email())) {
+            throw new UserAlreadyRegisteredException();
+        }
+        if (storeRepository.existsByNickname(request.nickname())) {
+            throw new UserAlreadyRegisteredException("Store name not available");
+        }
+        Store store = Store.builder()
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .nickname(request.nickname())
+                .address(request.address())
+                .build();
+
+        storeRepository.save(store);
+        String token = jwtProvider.generateToken(store);
         return new JwtResponse(token);
     }
 }

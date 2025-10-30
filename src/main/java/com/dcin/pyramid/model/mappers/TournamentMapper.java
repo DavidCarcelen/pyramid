@@ -15,7 +15,7 @@ public class TournamentMapper {
                 tournament.getFormat(),
                 tournament.getExtraInfo(),
                 tournament.getPrice(),
-                tournament.getOrganizer().getUserName(),
+                tournament.getOrganizer().getNickname(),
                 tournament.getCompanionCode(),
                 tournament.isOpenTournament(),
                 tournament.isFullTournament(),
