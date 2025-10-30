@@ -12,7 +12,7 @@ public class UserMapper {
         return new UserDTO(
                 user.getId(),
                 user.getEmail(),
-                user.getNickname(),
+                user.getUserName(),
                 user.getRole(),
                 teamName,
                 user.getProfilePictureUrl());

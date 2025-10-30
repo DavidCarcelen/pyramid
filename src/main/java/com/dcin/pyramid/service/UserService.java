@@ -1,9 +1,9 @@
 package com.dcin.pyramid.service;
 
 import com.dcin.pyramid.model.dto.GeneralResponse;
-import com.dcin.pyramid.model.dto.SignUpRequest;
+import com.dcin.pyramid.model.dto.auth.SignUpRequest;
 import com.dcin.pyramid.model.dto.UserDTO;
-import com.dcin.pyramid.model.entity.Role;
+import com.dcin.pyramid.model.dto.Role;
 import com.dcin.pyramid.model.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 

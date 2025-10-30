@@ -1,7 +1,7 @@
 package com.dcin.pyramid.controller;
 
 import com.dcin.pyramid.model.dto.GeneralResponse;
-import com.dcin.pyramid.model.dto.RegistrationsResponse;
+import com.dcin.pyramid.model.dto.registration.RegistrationsResponse;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/registrations")
+@RequestMapping("/pyramid/registrations")
 public class RegistrationController {
     private final RegistrationService registrationService;
 

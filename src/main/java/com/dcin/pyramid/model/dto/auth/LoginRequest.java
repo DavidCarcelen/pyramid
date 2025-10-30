@@ -1,4 +1,4 @@
-package com.dcin.pyramid.model.dto;
+package com.dcin.pyramid.model.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

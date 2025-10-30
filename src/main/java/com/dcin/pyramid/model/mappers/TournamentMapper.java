@@ -1,6 +1,6 @@
 package com.dcin.pyramid.model.mappers;
 
-import com.dcin.pyramid.model.dto.TournamentInfoDTO;
+import com.dcin.pyramid.model.dto.tournament.TournamentInfoDTO;
 import com.dcin.pyramid.model.entity.Tournament;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +15,7 @@ public class TournamentMapper {
                 tournament.getFormat(),
                 tournament.getExtraInfo(),
                 tournament.getPrice(),
-                tournament.getOrganizer().getNickname(),
+                tournament.getOrganizer().getUserName(),
                 tournament.getCompanionCode(),
                 tournament.isOpenTournament(),
                 tournament.isFullTournament(),

@@ -1,4 +1,4 @@
-package com.dcin.pyramid.model.dto;
+package com.dcin.pyramid.model.dto.tournament;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

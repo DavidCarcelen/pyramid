@@ -31,7 +31,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
         String requestPath = request.getServletPath();
-        if (authHeader == null || !authHeader.startsWith("Bearer ") || requestPath.startsWith("/auth/")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ") || requestPath.startsWith("/pyramid/auth/")) {
             filterChain.doFilter(request, response);
             return;
         }

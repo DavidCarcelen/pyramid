@@ -4,8 +4,8 @@ import com.dcin.pyramid.exception.UnauthorizedActionException;
 import com.dcin.pyramid.exception.UserAlreadyRegisteredException;
 import com.dcin.pyramid.exception.EntityNotFoundException;
 import com.dcin.pyramid.model.dto.GeneralResponse;
-import com.dcin.pyramid.model.dto.RegistrationInfoDTO;
-import com.dcin.pyramid.model.dto.RegistrationsResponse;
+import com.dcin.pyramid.model.dto.registration.RegistrationInfoDTO;
+import com.dcin.pyramid.model.dto.registration.RegistrationsResponse;
 import com.dcin.pyramid.model.entity.Registration;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
@@ -77,7 +77,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             promotion = promotePlayerRegistration(tournament.getId());
         }
         String message = promotion ? " registration deleted and first player on reserve list promoted." : " registration deleted.";
-        return new GeneralResponse(registration.getPlayer().getNickname() + message);
+        return new GeneralResponse(registration.getPlayer().getUserName() + message);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             registrationRepository.save(registration);
             message = " registration marked as paid.";
         }
-        return new GeneralResponse(registration.getPlayer().getNickname() + message);
+        return new GeneralResponse(registration.getPlayer().getUserName() + message);
     }
 
 }

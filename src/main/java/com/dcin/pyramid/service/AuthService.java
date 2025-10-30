@@ -1,8 +1,8 @@
 package com.dcin.pyramid.service;
 
-import com.dcin.pyramid.model.dto.JwtResponse;
-import com.dcin.pyramid.model.dto.LoginRequest;
-import com.dcin.pyramid.model.dto.SignUpRequest;
+import com.dcin.pyramid.model.dto.auth.JwtResponse;
+import com.dcin.pyramid.model.dto.auth.LoginRequest;
+import com.dcin.pyramid.model.dto.auth.SignUpRequest;
 
 public interface AuthService {
     JwtResponse login (LoginRequest request);

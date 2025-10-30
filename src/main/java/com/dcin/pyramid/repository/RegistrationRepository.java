@@ -1,9 +1,7 @@
 package com.dcin.pyramid.repository;
 
-import com.dcin.pyramid.model.dto.RegistrationInfoDTO;
+import com.dcin.pyramid.model.dto.registration.RegistrationInfoDTO;
 import com.dcin.pyramid.model.entity.Registration;
-import com.dcin.pyramid.model.entity.Tournament;
-import com.dcin.pyramid.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

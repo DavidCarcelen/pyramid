@@ -48,7 +48,7 @@ public class TeamServiceImpl implements TeamService {
         teamUtils.checkIfUserIsNotInATeam(newMember);
         newMember.setTeam(user.getTeam());
         userRepository.save(newMember);
-        return new GeneralResponse(newMember.getNickname() + " added to team " + newMember.getTeam().getTeamName());
+        return new GeneralResponse(newMember.getUserName() + " added to team " + newMember.getTeam().getTeamName());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class TeamServiceImpl implements TeamService {
         teamUtils.checkIfUserIsMember(memberToRemove, team);
         memberToRemove.setTeam(null);
         userRepository.save(memberToRemove);
-        return new GeneralResponse(memberToRemove.getNickname() + " removed from team " + team.getTeamName());
+        return new GeneralResponse(memberToRemove.getUserName() + " removed from team " + team.getTeamName());
     }
 
     @Override

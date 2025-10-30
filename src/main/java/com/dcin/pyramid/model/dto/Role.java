@@ -1,4 +1,4 @@
-package com.dcin.pyramid.model.entity;
+package com.dcin.pyramid.model.dto;
 
 public enum Role {
     PLAYER,

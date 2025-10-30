@@ -1,8 +1,8 @@
 package com.dcin.pyramid.controller;
 
-import com.dcin.pyramid.model.dto.JwtResponse;
-import com.dcin.pyramid.model.dto.LoginRequest;
-import com.dcin.pyramid.model.dto.SignUpRequest;
+import com.dcin.pyramid.model.dto.auth.JwtResponse;
+import com.dcin.pyramid.model.dto.auth.LoginRequest;
+import com.dcin.pyramid.model.dto.auth.SignUpRequest;
 import com.dcin.pyramid.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/pyramid/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;

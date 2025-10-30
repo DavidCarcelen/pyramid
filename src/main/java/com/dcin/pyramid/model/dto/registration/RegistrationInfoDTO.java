@@ -1,4 +1,4 @@
-package com.dcin.pyramid.model.dto;
+package com.dcin.pyramid.model.dto.registration;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

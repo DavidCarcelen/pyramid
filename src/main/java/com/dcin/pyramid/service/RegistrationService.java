@@ -1,7 +1,7 @@
 package com.dcin.pyramid.service;
 
 import com.dcin.pyramid.model.dto.GeneralResponse;
-import com.dcin.pyramid.model.dto.RegistrationsResponse;
+import com.dcin.pyramid.model.dto.registration.RegistrationsResponse;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
 

@@ -1,10 +1,9 @@
 package com.dcin.pyramid.controller;
 
 import com.dcin.pyramid.model.dto.GeneralResponse;
-import com.dcin.pyramid.model.dto.SingleTournamentResponse;
-import com.dcin.pyramid.model.dto.TournamentRequest;
-import com.dcin.pyramid.model.dto.TournamentsResponse;
-import com.dcin.pyramid.model.entity.Tournament;
+import com.dcin.pyramid.model.dto.tournament.SingleTournamentResponse;
+import com.dcin.pyramid.model.dto.tournament.TournamentRequest;
+import com.dcin.pyramid.model.dto.tournament.TournamentsResponse;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.service.TournamentService;
 import com.dcin.pyramid.service.impl.TournamentRegistrationCoordinator;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/tournaments")
+@RequestMapping("/pyramid/tournaments")
 @RequiredArgsConstructor
 public class TournamentController {
     private final TournamentService tournamentService;

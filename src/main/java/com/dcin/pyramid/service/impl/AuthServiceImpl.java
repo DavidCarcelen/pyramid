@@ -1,9 +1,9 @@
 package com.dcin.pyramid.service.impl;
 
 import com.dcin.pyramid.exception.UserAlreadyRegisteredException;
-import com.dcin.pyramid.model.dto.JwtResponse;
-import com.dcin.pyramid.model.dto.LoginRequest;
-import com.dcin.pyramid.model.dto.SignUpRequest;
+import com.dcin.pyramid.model.dto.auth.JwtResponse;
+import com.dcin.pyramid.model.dto.auth.LoginRequest;
+import com.dcin.pyramid.model.dto.auth.SignUpRequest;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.repository.UserRepository;
 import com.dcin.pyramid.security.JwtProvider;
@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
             User user = User.builder()
                     .email(request.email())
                     .password(passwordEncoder.encode(request.password()))
-                    .nickname(request.nickname())
+                    .userName(request.nickname())
                     .role(request.role())
                     .build();
             userRepository.save(user);
