@@ -8,16 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "type"
-)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = PlayerDTO.class, name = "player"),
-        @JsonSubTypes.Type(value = StoreDTO.class, name = "store")
-})
 @Getter
 @Setter
 @NoArgsConstructor

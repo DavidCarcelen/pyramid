@@ -10,7 +10,6 @@ import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.repository.PlayerRepository;
 import com.dcin.pyramid.repository.StoreRepository;
-import com.dcin.pyramid.repository.UserRepository;
 import com.dcin.pyramid.security.JwtProvider;
 import com.dcin.pyramid.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final PlayerRepository playerRepository;
     private final StoreRepository storeRepository;
@@ -39,27 +37,6 @@ public class AuthServiceImpl implements AuthService {
         return new JwtResponse(token);
     }
 
-    /*
-        @Override
-        public JwtResponse signup(PlayerSignUpRequest request) {//make two methods
-            userRepository.findByEmail(request.email())
-                    .ifPresent(user -> {
-                        throw new UserAlreadyRegisteredException();
-                    });
-            userRepository.findByNickname(request.nickname())
-                    .ifPresent(user -> {
-                        throw new UserAlreadyRegisteredException("Nickname not available.");
-                    });
-                User user = User.builder()
-                        .email(request.email())
-                        .password(passwordEncoder.encode(request.password()))
-                        .userName(request.nickname())
-                        .role(request.role())
-                        .build();
-                userRepository.save(user);
-                String token = jwtProvider.generateToken(user);
-            return new JwtResponse(token);
-        }*/
     @Override
     public JwtResponse playerSignup(PlayerSignUpRequest request) {
         if (playerRepository.existsByEmail(request.email())) {

@@ -3,7 +3,6 @@ package com.dcin.pyramid.security;
 import com.dcin.pyramid.exception.EntityNotFoundException;
 import com.dcin.pyramid.repository.PlayerRepository;
 import com.dcin.pyramid.repository.StoreRepository;
-import com.dcin.pyramid.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
