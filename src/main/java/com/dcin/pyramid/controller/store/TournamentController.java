@@ -1,4 +1,4 @@
-package com.dcin.pyramid.controller;
+package com.dcin.pyramid.controller.store;
 
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.tournament.SingleTournamentResponse;

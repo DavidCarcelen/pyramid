@@ -25,8 +25,8 @@ public class Team {
     private String teamEmoji;
     @OneToOne
     @JoinColumn(nullable = false)
-    private User founder;
+    private Player founder;
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
-    private List<User> members = new ArrayList<>();
+    private List<Player> members = new ArrayList<>();
     private LocalDateTime createdAt = LocalDateTime.now();
 }
