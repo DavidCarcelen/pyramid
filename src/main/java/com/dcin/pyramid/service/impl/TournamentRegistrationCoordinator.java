@@ -25,7 +25,7 @@ public class TournamentRegistrationCoordinator implements TournamentRegisntartio
     @Override
     public GeneralResponse updateMaxPlayers(User user, UUID tournamentId, int newMaxPlayers) {
         Tournament tournament = tournamentService.getTournamentById(tournamentId);
-        tournamentUtils.checkUserOrganizer(user, tournament.getOrganizer());
+        tournamentUtils.checkStoreOrganizer(user, tournament.getOrganizer());
         tournamentUtils.checkTournamentFinished(tournament);
         int activePlayers = (int) tournament.getRegistrations().stream().filter(r -> !r.isReserveList()).count();
         if (newMaxPlayers < activePlayers) {

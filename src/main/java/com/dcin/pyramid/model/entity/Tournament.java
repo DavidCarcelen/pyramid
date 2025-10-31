@@ -36,7 +36,7 @@ public class Tournament {
     private List<Registration> registrations;
     @ManyToOne
     @JoinColumn(nullable = false)
-    private User organizer;
+    private Store organizer;
     private String companionCode;
     private boolean openTournament;
     @Builder.Default

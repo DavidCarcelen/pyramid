@@ -7,6 +7,7 @@ import com.dcin.pyramid.model.dto.tournament.SingleTournamentResponse;
 import com.dcin.pyramid.model.dto.tournament.TournamentInfoDTO;
 import com.dcin.pyramid.model.dto.tournament.TournamentRequest;
 import com.dcin.pyramid.model.dto.tournament.TournamentsResponse;
+import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.model.entity.Tournament;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.model.mappers.TournamentMapper;
@@ -38,7 +39,7 @@ public class TournamentServiceImpl implements TournamentService {
 
     @Transactional
     @Override
-    public SingleTournamentResponse createTournament(TournamentRequest request, User organizer) {
+    public SingleTournamentResponse createTournament(Store organizer, TournamentRequest request) {
         Tournament tournament = Tournament.builder()
                 .tournamentName(request.tournamentName())
                 .startDateTime(request.startDateTime())
@@ -52,6 +53,59 @@ public class TournamentServiceImpl implements TournamentService {
                 .build();
         tournamentRepository.save(tournament);
         return new SingleTournamentResponse("Tournament created!", tournamentMapper.toDTO(tournament));
+    }
+
+    @Override
+    public TournamentsResponse getAllTournaments(UUID storeId) {
+        List<TournamentInfoDTO> dtoList = tournamentRepository.findByOrganizerId(storeId).stream()
+                .map(tournamentMapper::toDTO)
+                .toList();
+        return new TournamentsResponse("Tournaments history: ", dtoList);
+    }
+
+    @Override
+    public SingleTournamentResponse updateTournament(Store store, TournamentRequest request, UUID tournamentId) {
+        Tournament tournamentToUpdate = getTournamentById(tournamentId);
+        tournamentUtils.checkStoreOrganizer(store, tournamentToUpdate.getOrganizer());
+        tournamentToUpdate.setTournamentName(request.tournamentName());
+        tournamentToUpdate.setStartDateTime(request.startDateTime());
+        tournamentToUpdate.setMaxPlayers(request.maxPlayers()); // mirar bien esto, cuidado con el metodo y registrations
+        tournamentToUpdate.setFormat(request.format());
+        tournamentToUpdate.setExtraInfo(request.extraInfo());
+        tournamentToUpdate.setPrice(request.price());
+        tournamentToUpdate.setOpenTournament(request.openTournament());
+        tournamentToUpdate.setCompanionCode(request.companionCode());
+        tournamentRepository.save(tournamentToUpdate);
+
+        return new SingleTournamentResponse("Tournament updated", tournamentMapper.toDTO(tournamentToUpdate));
+    }
+
+    @Override
+    public GeneralResponse deleteTournament(Store store, UUID tournamentId) {
+        Tournament tournamentToDelete = getTournamentById(tournamentId);
+        tournamentUtils.checkStoreOrganizer(store, tournamentToDelete.getOrganizer());
+        tournamentRepository.delete(tournamentToDelete);
+        return new GeneralResponse("Tournament deleted");
+    }
+
+    @Override
+    public GeneralResponse openCloseTournament(Store store, UUID tournamentId, boolean state) {
+        Tournament tournament = getTournamentById(tournamentId);
+        tournamentUtils.checkStoreOrganizer(store, tournament.getOrganizer());
+        tournament.setOpenTournament(state);
+        tournamentRepository.save(tournament);
+        String message = state ? "open." : "closed.";
+        return new GeneralResponse("Tournament registrations " + message);
+    }
+
+    @Override
+    public GeneralResponse addCompanionCode(Store store, UUID tournamentId, String companionCode) {
+        Tournament tournament = getTournamentById(tournamentId);
+        tournamentUtils.checkStoreOrganizer(store, tournament.getOrganizer());
+        tournamentUtils.checkTournamentFinished(tournament);
+        tournament.setCompanionCode(companionCode);
+        tournamentRepository.save(tournament);
+        return new GeneralResponse("Companion code added successfully  ");
     }
 
     @Override
@@ -70,41 +124,6 @@ public class TournamentServiceImpl implements TournamentService {
 
 
     @Override
-    public SingleTournamentResponse updateTournament(TournamentRequest request, User user, UUID tournamentId) {
-        Tournament tournamentToUpdate = getTournamentById(tournamentId);
-        tournamentUtils.checkUserOrganizer(user, tournamentToUpdate.getOrganizer());
-        tournamentToUpdate.setTournamentName(request.tournamentName());
-        tournamentToUpdate.setStartDateTime(request.startDateTime());
-        tournamentToUpdate.setMaxPlayers(request.maxPlayers()); // mirar bien esto, cuidado con el metodo y registrations
-        tournamentToUpdate.setFormat(request.format());
-        tournamentToUpdate.setExtraInfo(request.extraInfo());
-        tournamentToUpdate.setPrice(request.price());
-        tournamentToUpdate.setOpenTournament(request.openTournament());
-        tournamentToUpdate.setCompanionCode(request.companionCode());
-        tournamentRepository.save(tournamentToUpdate);
-
-        return new SingleTournamentResponse("Tournament updated", tournamentMapper.toDTO(tournamentToUpdate));
-    }
-
-    @Override
-    public GeneralResponse deleteTournament(User user, UUID tournamentId) {
-        Tournament tournamentToDelete = getTournamentById(tournamentId);
-        tournamentUtils.checkUserOrganizer(user, tournamentToDelete.getOrganizer());
-        tournamentRepository.delete(tournamentToDelete);
-        return new GeneralResponse("Tournament deleted");
-    }
-
-    @Override
-    public TournamentsResponse getAllTournaments(UUID userId) {
-        List<TournamentInfoDTO> dtoList = tournamentRepository.findByOrganizerId(userId).stream()
-                .map(tournamentMapper::toDTO)
-                .toList();
-        return new TournamentsResponse("Tournaments history: ", dtoList);
-    }
-
-
-
-    @Override
     public void updatePrizeMoneyAndSpotsAvailable(UUID tournamentId, int activePlayers) {
         Tournament tournament = getTournamentById(tournamentId);
         tournament.setPrizeMoney(tournament.getPrice().multiply(new BigDecimal(activePlayers)));
@@ -114,35 +133,16 @@ public class TournamentServiceImpl implements TournamentService {
 
 
     @Override
-    public GeneralResponse openCloseTournament(User user, UUID tournamentId, boolean state) {
-        Tournament tournament = getTournamentById(tournamentId);
-        tournamentUtils.checkUserOrganizer(user, tournament.getOrganizer());
-        tournament.setOpenTournament(state);
-        tournamentRepository.save(tournament);
-        String message = state ? "open." : "closed.";
-        return new GeneralResponse("Tournament registrations " + message);
-    }
-
-    @Override
     public SingleTournamentResponse getOneTournament(UUID tournamentId) {
         Tournament tournament = getTournamentById(tournamentId);
         return new SingleTournamentResponse("Tournament", tournamentMapper.toDTO(tournament));
     }
 
-    @Override
-    public GeneralResponse addCompanionCode(User user, UUID tournamentId, String companionCode) {
-        Tournament tournament = getTournamentById(tournamentId);
-        tournamentUtils.checkUserOrganizer(user, tournament.getOrganizer());
-        tournamentUtils.checkTournamentFinished(tournament);
-        tournament.setCompanionCode(companionCode);
-        tournamentRepository.save(tournament);
-        return new GeneralResponse("Companion code added successfully  ");
-    }
 
     @Override
-    public GeneralResponse finishTournament(User user, UUID tournamentId) {
+    public GeneralResponse finishTournament(Store store, UUID tournamentId) {
         Tournament tournament = getTournamentById(tournamentId);
-        tournamentUtils.checkUserOrganizer(user, tournament.getOrganizer());
+        tournamentUtils.checkStoreOrganizer(store, tournament.getOrganizer());
         if (tournament.getStartDateTime().isAfter(LocalDateTime.now())) {
             throw new UnauthorizedActionException("Can't finish this tournament, It hasn't started yet");
         }

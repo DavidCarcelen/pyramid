@@ -1,13 +1,9 @@
 package com.dcin.pyramid.controller.store;
 
 import com.dcin.pyramid.model.dto.GeneralResponse;
-import com.dcin.pyramid.model.dto.auth.PlayerSignUpRequest;
 import com.dcin.pyramid.model.dto.auth.StoreSignUpRequest;
-import com.dcin.pyramid.model.dto.user.PlayerDTO;
 import com.dcin.pyramid.model.dto.user.StoreDTO;
-import com.dcin.pyramid.model.entity.Player;
 import com.dcin.pyramid.model.entity.Store;
-import com.dcin.pyramid.service.PlayerService;
 import com.dcin.pyramid.service.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/pyramid/store")
-@PreAuthorize("hasRole('PLAYER')")
+@PreAuthorize("hasRole('STORE')")
 public class StoreController {
     private final StoreService storeService;
 

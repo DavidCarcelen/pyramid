@@ -2,12 +2,9 @@ package com.dcin.pyramid.util;
 
 import com.dcin.pyramid.exception.ClosedTournamentException;
 import com.dcin.pyramid.exception.UnauthorizedActionException;
+import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.model.entity.Tournament;
-import com.dcin.pyramid.model.entity.User;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Component
 public class TournamentUtils {
@@ -22,8 +19,8 @@ public class TournamentUtils {
             throw new ClosedTournamentException();
         }
     }
-    public void checkUserOrganizer(User user, User organizer){
-        if(!user.equals(organizer)){
+    public void checkStoreOrganizer(Store store, Store organizer){
+        if(!store.equals(organizer)){
             throw new UnauthorizedActionException("Only the organizer can make this operation.");
         }
     }

@@ -113,7 +113,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public GeneralResponse markAsPaid(User store, UUID registrationId) {
         Registration registration = getRegistrationById(registrationId);
         Tournament tournament = registration.getTournament();
-        tournamentUtils.checkUserOrganizer(store, tournament.getOrganizer());
+        tournamentUtils.checkStoreOrganizer(store, tournament.getOrganizer());
         String message;
         if (registration.isPaid()) {
             message = " is already marked as paid.";
