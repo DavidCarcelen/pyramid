@@ -26,11 +26,11 @@ public class Registration {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "player_id",nullable = false)
     private Player player;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "tournament_id",nullable = false)
     private Tournament tournament;
 
     private boolean paid;

@@ -27,19 +27,19 @@ public class JwtProvider {
     private long expiration;
 
     public String generateToken(User user) {
-        String userType;
+        String role;
 
         if (user instanceof Player) {
-            userType = "PLAYER";
+            role = "ROLE_PLAYER";
         } else if (user instanceof Store) {
-            userType = "STORE";
+            role = "ROLE_STORE";
         } else {
-            throw new IllegalArgumentException("Unknown user type: " + user.getClass());
+            throw new IllegalArgumentException("Unknown user type.");
         }
 
         return Jwts.builder()
                 .setSubject(user.getEmail())
-                .claim("userType", userType)
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -57,8 +57,8 @@ public class JwtProvider {
         return validateToken(token).getBody().getSubject();
     }
 
-    public String getUserTypeFromToken(String token) {
-        return validateToken(token).getBody().get("userType", String.class);
+    public String getRoleFromToken(String token) {
+        return validateToken(token).getBody().get("role", String.class);
     }
 
     private Key getSigningKey() {

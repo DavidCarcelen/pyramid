@@ -9,7 +9,6 @@ import com.dcin.pyramid.model.dto.tournament.TournamentRequest;
 import com.dcin.pyramid.model.dto.tournament.TournamentsResponse;
 import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.model.entity.Tournament;
-import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.model.mappers.TournamentMapper;
 import com.dcin.pyramid.repository.TournamentRepository;
 import com.dcin.pyramid.service.TournamentService;

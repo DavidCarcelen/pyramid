@@ -7,7 +7,6 @@ import com.dcin.pyramid.model.dto.auth.StoreSignUpRequest;
 
 public interface AuthService {
     JwtResponse login (LoginRequest request);
-    //JwtResponse signup(PlayerSignUpRequest request);
     JwtResponse playerSignup(PlayerSignUpRequest request);
     JwtResponse storeSignup(StoreSignUpRequest request);
 

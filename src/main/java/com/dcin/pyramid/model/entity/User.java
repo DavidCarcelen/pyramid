@@ -29,7 +29,7 @@ public abstract class User implements UserDetails {
     @Column(nullable = false, unique = true)
     protected String nickname;
 
-    @Column
+    @Column(name = "profile_picture")
     protected String profilePictureUrl;
 
 

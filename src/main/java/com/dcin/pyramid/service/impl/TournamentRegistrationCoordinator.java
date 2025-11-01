@@ -2,8 +2,8 @@ package com.dcin.pyramid.service.impl;
 
 import com.dcin.pyramid.exception.UnauthorizedActionException;
 import com.dcin.pyramid.model.dto.GeneralResponse;
+import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.model.entity.Tournament;
-import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.repository.TournamentRepository;
 import com.dcin.pyramid.service.RegistrationService;
 import com.dcin.pyramid.service.TournamentRegisntartionCoordinator;
@@ -23,15 +23,15 @@ public class TournamentRegistrationCoordinator implements TournamentRegisntartio
     private final TournamentRepository tournamentRepository;
 
     @Override
-    public GeneralResponse updateMaxPlayers(User user, UUID tournamentId, int newMaxPlayers) {
+    public GeneralResponse updateMaxPlayers(Store store, UUID tournamentId, int newMaxPlayers) {
         Tournament tournament = tournamentService.getTournamentById(tournamentId);
-        tournamentUtils.checkStoreOrganizer(user, tournament.getOrganizer());
+        tournamentUtils.checkStoreOrganizer(store, tournament.getOrganizer());
         tournamentUtils.checkTournamentFinished(tournament);
         int activePlayers = (int) tournament.getRegistrations().stream().filter(r -> !r.isReserveList()).count();
         if (newMaxPlayers < activePlayers) {
             throw new UnauthorizedActionException("Can't set maxPlayers to less than current active players (" + activePlayers + ").");
         }
-        boolean full = newMaxPlayers == activePlayers?true:false;
+        boolean full = newMaxPlayers == activePlayers;
         tournament.setFullTournament(full);
         tournament.setMaxPlayers(newMaxPlayers);
         tournamentRepository.save(tournament);

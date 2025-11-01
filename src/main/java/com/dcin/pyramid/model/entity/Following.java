@@ -1,9 +1,6 @@
 package com.dcin.pyramid.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +17,12 @@ public class Following {
     @GeneratedValue
     private UUID id;
     @ManyToOne
-    private User user;
+    @JoinColumn(name = "follower_id")
+    private Player follower;
+
+    @ManyToOne
+    @JoinColumn(name = "followed_store_id")
+    private Store followedStore;
 
     private LocalDateTime followedAt = LocalDateTime.now();
 

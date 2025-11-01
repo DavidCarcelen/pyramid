@@ -3,6 +3,7 @@ package com.dcin.pyramid.config;
 import com.dcin.pyramid.exception.SecurityExceptionHandler;
 import com.dcin.pyramid.security.CustomUserDetailsService;
 import com.dcin.pyramid.security.JwtAuthFilter;
+import com.dcin.pyramid.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,11 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final CustomUserDetailsService userDetailsService;
     private final SecurityExceptionHandler securityExceptionHandler;
+    //private final JwtProvider jwtProvider;
+    /*@Bean
+    public JwtAuthFilter jwtAuthFilter(){
+        return new JwtAuthFilter(jwtProvider, userDetailsService);
+    }*/
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{

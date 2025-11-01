@@ -6,9 +6,7 @@ import com.dcin.pyramid.exception.EntityNotFoundException;
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.registration.RegistrationInfoDTO;
 import com.dcin.pyramid.model.dto.registration.RegistrationsResponse;
-import com.dcin.pyramid.model.entity.Registration;
-import com.dcin.pyramid.model.entity.Tournament;
-import com.dcin.pyramid.model.entity.User;
+import com.dcin.pyramid.model.entity.*;
 import com.dcin.pyramid.repository.RegistrationRepository;
 import com.dcin.pyramid.service.RegistrationService;
 import com.dcin.pyramid.service.TournamentService;
@@ -35,7 +33,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationsResponse handleRegistration(User player, UUID tournamentId) {
+    public RegistrationsResponse handleRegistration(Player player, UUID tournamentId) {
         Tournament tournament = tournamentService.getTournamentById(tournamentId);
         tournamentUtils.checkTournamentFinished(tournament);
         tournamentUtils.checkTournamentOpen(tournament);
@@ -50,7 +48,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationsResponse newRegistration(User player, Tournament tournament, boolean reserveList) {
+    public RegistrationsResponse newRegistration(Player player, Tournament tournament, boolean reserveList) {
         Registration registration = Registration.builder()
                 .player(player)
                 .tournament(tournament)
@@ -77,7 +75,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             promotion = promotePlayerRegistration(tournament.getId());
         }
         String message = promotion ? " registration deleted and first player on reserve list promoted." : " registration deleted.";
-        return new GeneralResponse(registration.getPlayer().getUserName() + message);
+        return new GeneralResponse(registration.getPlayer().getNickname() + message);
     }
 
     @Override
@@ -110,7 +108,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public GeneralResponse markAsPaid(User store, UUID registrationId) {
+    public GeneralResponse markAsPaid(Store store, UUID registrationId) {
         Registration registration = getRegistrationById(registrationId);
         Tournament tournament = registration.getTournament();
         tournamentUtils.checkStoreOrganizer(store, tournament.getOrganizer());
@@ -122,7 +120,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             registrationRepository.save(registration);
             message = " registration marked as paid.";
         }
-        return new GeneralResponse(registration.getPlayer().getUserName() + message);
+        return new GeneralResponse(registration.getPlayer().getNickname() + message);
     }
 
 }

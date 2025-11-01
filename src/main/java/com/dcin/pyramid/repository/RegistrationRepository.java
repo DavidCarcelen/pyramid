@@ -24,7 +24,7 @@ public interface RegistrationRepository extends JpaRepository<Registration, UUID
     Optional<Registration> findFirstByTournamentIdAndReserveListTrueOrderByRegisteredAtAsc(UUID tournamentId);
 
     @Query("""
-    SELECT new com.dcin.pyramid.model.dto.RegistrationInfoDTO(
+    SELECT new com.dcin.pyramid.model.dto.registration.RegistrationInfoDTO(
         r.id,
         p.nickname,
         t.teamEmoji,

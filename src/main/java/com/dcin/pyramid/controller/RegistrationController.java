@@ -2,6 +2,8 @@ package com.dcin.pyramid.controller;
 
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.registration.RegistrationsResponse;
+import com.dcin.pyramid.model.entity.Player;
+import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
@@ -19,15 +21,15 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping("/{tournamentId}")
-    public ResponseEntity<RegistrationsResponse> newRegistration(@AuthenticationPrincipal User player,
+    public ResponseEntity<RegistrationsResponse> newRegistration(@AuthenticationPrincipal Player player,
                                                                  @PathVariable UUID tournamentId) {
         return ResponseEntity.ok(registrationService.handleRegistration(player, tournamentId));
     }
 
     @DeleteMapping("/{registrationId}")
-    public ResponseEntity<GeneralResponse> deleteRegistration(@AuthenticationPrincipal User player,
+    public ResponseEntity<GeneralResponse> deleteRegistration(@AuthenticationPrincipal User user,//create second method for store?
                                                               @PathVariable UUID registrationId) {
-        return ResponseEntity.ok(registrationService.deleteRegistration(player, registrationId));
+        return ResponseEntity.ok(registrationService.deleteRegistration(user, registrationId));
     }
 
     @GetMapping("/{tournamentId}")
@@ -37,7 +39,7 @@ public class RegistrationController {
 
     @PreAuthorize("hasRole('STORE')")
     @PatchMapping("/{registrationId}/mark-paid")
-    public ResponseEntity<GeneralResponse> markRegistrationAsPaid(@AuthenticationPrincipal User store,
+    public ResponseEntity<GeneralResponse> markRegistrationAsPaid(@AuthenticationPrincipal Store store,
                                                                   @PathVariable UUID registrationId) {
         return ResponseEntity.ok(registrationService.markAsPaid(store, registrationId));
     }
