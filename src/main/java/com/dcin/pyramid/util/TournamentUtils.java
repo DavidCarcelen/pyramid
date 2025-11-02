@@ -20,7 +20,7 @@ public class TournamentUtils {
         }
     }
     public void checkStoreOrganizer(Store store, Store organizer){
-        if(!store.equals(organizer)){
+        if(!store.getId().equals(organizer.getId())){
             throw new UnauthorizedActionException("Only the organizer can make this operation.");
         }
     }

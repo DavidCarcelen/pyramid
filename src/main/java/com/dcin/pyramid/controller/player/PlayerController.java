@@ -3,6 +3,7 @@ package com.dcin.pyramid.controller.player;
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.auth.PlayerSignUpRequest;
 import com.dcin.pyramid.model.dto.user.PlayerDTO;
+import com.dcin.pyramid.model.dto.user.UpdatePlayerRequest;
 import com.dcin.pyramid.model.entity.Player;
 import com.dcin.pyramid.service.PlayerService;
 import jakarta.validation.Valid;
@@ -22,7 +23,7 @@ public class PlayerController {
 
     @PutMapping("/update")
     public ResponseEntity<GeneralResponse> updatePlayer(@AuthenticationPrincipal Player player,
-                                                      @Valid @RequestBody PlayerSignUpRequest request) {
+                                                      @Valid @RequestBody UpdatePlayerRequest request) {
         return ResponseEntity.ok(playerService.updatePlayer(player, request));
     }
 

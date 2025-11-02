@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/pyramid/players/teams")
+@RequestMapping("/pyramid/player/teams")
 @PreAuthorize("hasRole('PLAYER')")
 public class TeamController {
     private final TeamService teamService;

@@ -1,9 +1,11 @@
 package com.dcin.pyramid.service.impl;
 
 import com.dcin.pyramid.exception.EntityNotFoundException;
+import com.dcin.pyramid.exception.UserAlreadyRegisteredException;
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.auth.StoreSignUpRequest;
 import com.dcin.pyramid.model.dto.user.StoreDTO;
+import com.dcin.pyramid.model.dto.user.UpdateStoreRequest;
 import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.repository.StoreRepository;
 import com.dcin.pyramid.service.StoreService;
@@ -26,10 +28,10 @@ public class StoreServiceImpl implements StoreService {
     private static final String UPLOAD_DIR = "uploads/";
 
     @Override
-    public GeneralResponse updateStore(Store store, StoreSignUpRequest request) {
-        store.setEmail(request.email());
-        store.setPassword(passwordEncoder.encode(request.password()));
-        //should be specific method in ath service to handle email and password update and sends new token
+    public GeneralResponse updateStore(Store store, UpdateStoreRequest request) {
+        if (!request.nickname().equals(store.getNickname()) && storeRepository.existsByNickname(request.nickname())) {
+            throw new UserAlreadyRegisteredException("Store name not available.");
+        }
         store.setNickname(request.nickname());
         store.setAddress(request.address());
         storeRepository.save(store);
@@ -77,7 +79,7 @@ public class StoreServiceImpl implements StoreService {
             storeRepository.save(store);
             return new GeneralResponse("Profile picture updated successfully!");
         } catch (IOException e) {
-            throw new RuntimeException("Error handling profile picture.");
+            throw new RuntimeException("Error handling profile picture."); //why
         }
     }
 }

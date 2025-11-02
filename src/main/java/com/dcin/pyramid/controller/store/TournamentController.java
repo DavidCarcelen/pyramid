@@ -37,10 +37,10 @@ public class TournamentController {
     }
 
 
-    @PutMapping("/update")
+    @PutMapping("/update/{tournamentId}")
     public ResponseEntity<SingleTournamentResponse> updateTournament(@AuthenticationPrincipal Store store,
-                                                                     @Valid @RequestBody TournamentRequest tournamentRequest,
-                                                                     @RequestParam(required = true) UUID tournamentId) {
+                                                                     @PathVariable UUID tournamentId,
+                                                                     @Valid @RequestBody TournamentRequest tournamentRequest) {
         return ResponseEntity.ok(tournamentService.updateTournament(store, tournamentRequest, tournamentId));
     }
 

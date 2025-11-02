@@ -27,11 +27,6 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final CustomUserDetailsService userDetailsService;
     private final SecurityExceptionHandler securityExceptionHandler;
-    //private final JwtProvider jwtProvider;
-    /*@Bean
-    public JwtAuthFilter jwtAuthFilter(){
-        return new JwtAuthFilter(jwtProvider, userDetailsService);
-    }*/
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{

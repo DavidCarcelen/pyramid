@@ -3,6 +3,7 @@ package com.dcin.pyramid.controller.store;
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.auth.StoreSignUpRequest;
 import com.dcin.pyramid.model.dto.user.StoreDTO;
+import com.dcin.pyramid.model.dto.user.UpdateStoreRequest;
 import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.service.StoreService;
 import jakarta.validation.Valid;
@@ -21,7 +22,7 @@ public class StoreController {
 
     @PutMapping("/update")
     public ResponseEntity<GeneralResponse> updateStore(@AuthenticationPrincipal Store store,
-                                                        @Valid @RequestBody StoreSignUpRequest request) {
+                                                        @Valid @RequestBody UpdateStoreRequest request) {
         return ResponseEntity.ok(storeService.updateStore(store, request));
     }
 

@@ -5,6 +5,7 @@ import com.dcin.pyramid.exception.UserAlreadyRegisteredException;
 import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.auth.PlayerSignUpRequest;
 import com.dcin.pyramid.model.dto.user.PlayerDTO;
+import com.dcin.pyramid.model.dto.user.UpdatePlayerRequest;
 import com.dcin.pyramid.model.entity.Player;
 import com.dcin.pyramid.repository.PlayerRepository;
 import com.dcin.pyramid.service.PlayerService;
@@ -28,12 +29,10 @@ public class PlayerServiceImpl implements PlayerService {
     private static final String UPLOAD_DIR = "uploads/";
 
     @Override
-    public GeneralResponse updatePlayer(Player player, PlayerSignUpRequest request) {
+    public GeneralResponse updatePlayer(Player player, UpdatePlayerRequest request) {
         if (!request.nickname().equals(player.getNickname()) && playerRepository.existsByNickname(request.nickname())) {
             throw new UserAlreadyRegisteredException("Nickname not available.");
         }
-        player.setEmail(request.email());
-        player.setPassword(passwordEncoder.encode(request.password()));
         player.setNickname(request.nickname());
         playerRepository.save(player);
         return new GeneralResponse("Player updated!");

@@ -22,11 +22,6 @@ import java.io.IOException;
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
     private final CustomUserDetailsService userDetailsService;
-/*
-    public JwtAuthFilter(JwtProvider jwtProvider, CustomUserDetailsService userDetailsService) {
-        this.jwtProvider = jwtProvider;
-        this.userDetailsService = userDetailsService;
-    }*/
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {

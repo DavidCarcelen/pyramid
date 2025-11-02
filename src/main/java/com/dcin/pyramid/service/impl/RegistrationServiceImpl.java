@@ -67,7 +67,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         tournamentUtils.checkTournamentOpen(tournament);
         tournamentUtils.checkTournamentFinished(tournament);
 
-        if (!registration.getPlayer().equals(user) && !tournament.getOrganizer().equals(user)) {
+        if (!registration.getPlayer().getId().equals(user.getId()) && !tournament.getOrganizer().getId().equals(user.getId())) {
             throw new UnauthorizedActionException("Can't delete others registrations.");
         }
         registrationRepository.delete(registration);
