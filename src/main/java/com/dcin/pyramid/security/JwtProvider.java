@@ -1,5 +1,6 @@
 package com.dcin.pyramid.security;
 
+import com.dcin.pyramid.exception.RoleException;
 import com.dcin.pyramid.model.entity.Player;
 import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.model.entity.User;
@@ -34,7 +35,7 @@ public class JwtProvider {
         } else if (user instanceof Store) {
             role = "ROLE_STORE";
         } else {
-            throw new IllegalArgumentException("Unknown user type.");
+            throw new RoleException("Player or Store type of user.");
         }
 
         return Jwts.builder()

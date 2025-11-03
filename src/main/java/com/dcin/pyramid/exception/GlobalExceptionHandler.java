@@ -16,7 +16,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public static ErrorMessage buildError(HttpStatus status, String message, String path){
         return new ErrorMessage(
                 status.value(),
-                LocalDateTime.now(),
+                //LocalDateTime.now(),
                 message,
                 path
         );
