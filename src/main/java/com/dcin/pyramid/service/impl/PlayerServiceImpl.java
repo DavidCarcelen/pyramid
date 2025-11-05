@@ -3,14 +3,12 @@ package com.dcin.pyramid.service.impl;
 import com.dcin.pyramid.exception.EntityNotFoundException;
 import com.dcin.pyramid.exception.UserAlreadyRegisteredException;
 import com.dcin.pyramid.model.dto.GeneralResponse;
-import com.dcin.pyramid.model.dto.auth.PlayerSignUpRequest;
 import com.dcin.pyramid.model.dto.user.PlayerDTO;
 import com.dcin.pyramid.model.dto.user.UpdatePlayerRequest;
 import com.dcin.pyramid.model.entity.Player;
 import com.dcin.pyramid.repository.PlayerRepository;
 import com.dcin.pyramid.service.PlayerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +22,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
-    private final PasswordEncoder passwordEncoder;
 
     private static final String UPLOAD_DIR = "uploads/";
 
