@@ -25,17 +25,21 @@ public class TournamentController {
     private final TournamentService tournamentService;
     private final TournamentRegistrationCoordinator tournamentRegistrationCoordinator;
 
+    @GetMapping("/home")
+    public ResponseEntity<TournamentsResponse> getMyUpcomingTournaments(@AuthenticationPrincipal Store store) {
+        return ResponseEntity.ok(tournamentService.getUpcomingTournamentsByStore(store.getId()));
+    }
+
     @PostMapping("/new")
     public ResponseEntity<SingleTournamentResponse> createTournament(@AuthenticationPrincipal Store store,
                                                                      @Valid @RequestBody TournamentRequest request) {
         return ResponseEntity.ok(tournamentService.createTournament(store, request));
     }
 
-    @GetMapping("/my-tournaments")
+    @GetMapping("/history")
     public ResponseEntity<TournamentsResponse> getAllMyTournaments(@AuthenticationPrincipal Store store) {
         return ResponseEntity.ok(tournamentService.getAllTournaments(store.getId()));
     }
-
 
     @PutMapping("/update/{tournamentId}")
     public ResponseEntity<SingleTournamentResponse> updateTournament(@AuthenticationPrincipal Store store,
