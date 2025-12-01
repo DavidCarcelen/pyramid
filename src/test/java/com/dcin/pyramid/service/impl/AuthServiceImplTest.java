@@ -49,7 +49,7 @@ public class AuthServiceImplTest {
     void setUp() {
         loginRequest = new LoginRequest("user@email.com", "password");
         playerRequest = new PlayerSignUpRequest("user@email.com", "password", "nickname");
-        storeRequest = new StoreSignUpRequest("user@email.com", "password", "nickname", "address");
+        storeRequest = new StoreSignUpRequest("user@email.com", "password", "nickname", "Spain", "Barcelona", "mapsLink", 100, "cardLink");
         player = Player.builder()
                 .email(loginRequest.email())
                 .password(loginRequest.password())

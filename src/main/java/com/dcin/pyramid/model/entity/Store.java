@@ -17,7 +17,10 @@ import java.util.List;
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 public class Store extends User{
-    private String address;
+    @Embedded
+    private Address address;
+    private int storeCapacity;
+    private String cardMarketLink;
 
     @OneToMany(mappedBy = "organizer")
     private List<Tournament> tournaments;

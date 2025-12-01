@@ -6,6 +6,7 @@ import com.dcin.pyramid.model.dto.GeneralResponse;
 import com.dcin.pyramid.model.dto.auth.StoreSignUpRequest;
 import com.dcin.pyramid.model.dto.user.StoreDTO;
 import com.dcin.pyramid.model.dto.user.UpdateStoreRequest;
+import com.dcin.pyramid.model.entity.Address;
 import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.repository.StoreRepository;
 import com.dcin.pyramid.service.StoreService;
@@ -33,7 +34,13 @@ public class StoreServiceImpl implements StoreService {
             throw new UserAlreadyRegisteredException("Store name not available.");
         }
         store.setNickname(request.nickname());
-        store.setAddress(request.address());
+        Address address = store.getAddress();
+        address.setCountry(request.country());
+        address.setCity(request.city());
+        address.setGoogleMapsLink(request.googleMapsLink());
+        store.setAddress(address);
+        store.setStoreCapacity(request.storeCapacity());
+        store.setCardMarketLink(request.cardMarketLink());
         storeRepository.save(store);
         return new GeneralResponse("Store updated!");
     }
@@ -57,7 +64,11 @@ public class StoreServiceImpl implements StoreService {
                 .email(store.getEmail())
                 .nickname(store.getNickname())
                 .profilePictureUrl(store.getProfilePictureUrl())
-                .address(store.getAddress())
+                .country(store.getAddress().getCountry())
+                .city(store.getAddress().getCity())
+                .googleMapsLink(store.getAddress().getGoogleMapsLink())
+                .storeCapacity(store.getStoreCapacity())
+                .cardMarketLink(store.getCardMarketLink())
                 .build();
     }
 

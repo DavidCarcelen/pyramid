@@ -33,7 +33,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/{tournamentId}")
-    public ResponseEntity<RegistrationsResponse> getRegisteredPlayersForOneTournament(@PathVariable UUID tournamentId) {//should be in feed?
+    public ResponseEntity<RegistrationsResponse> getRegisteredPlayersForOneTournament(@PathVariable UUID tournamentId) {
         return ResponseEntity.ok(registrationService.getAllRegistrations(tournamentId));
     }
 

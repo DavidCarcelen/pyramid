@@ -12,5 +12,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 public class StoreDTO extends UserDTO{
-    private String address;
+    private String country;
+    private String city;
+    private String googleMapsLink;
+    private int storeCapacity;
+    private String cardMarketLink;
 }

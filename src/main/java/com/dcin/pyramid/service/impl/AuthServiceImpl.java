@@ -5,6 +5,7 @@ import com.dcin.pyramid.model.dto.auth.JwtResponse;
 import com.dcin.pyramid.model.dto.auth.LoginRequest;
 import com.dcin.pyramid.model.dto.auth.PlayerSignUpRequest;
 import com.dcin.pyramid.model.dto.auth.StoreSignUpRequest;
+import com.dcin.pyramid.model.entity.Address;
 import com.dcin.pyramid.model.entity.Player;
 import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.model.entity.User;
@@ -67,7 +68,13 @@ public class AuthServiceImpl implements AuthService {
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .nickname(request.nickname())
-                .address(request.address())
+                .address(Address.builder()
+                        .country(request.country())
+                        .city(request.city())
+                        .googleMapsLink(request.googleMapsLink())
+                        .build())
+                .storeCapacity(request.storeCapacity())
+                .cardMarketLink(request.cardMarketLink())
                 .build();
 
         storeRepository.save(store);

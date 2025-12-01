@@ -9,6 +9,17 @@ public record StoreSignUpRequest(
         String password,
         @NotBlank(message = "Store name is required")
         String nickname,
-        @NotBlank(message = "Address is required")
-        String address) {
+        @NotBlank(message = "Country is required")
+        String country,
+        @NotBlank(message = "City is required")
+        String city,
+        String googleMapsLink,
+        @NotBlank(message = "Store capacity is required")
+        int storeCapacity,
+        String cardMarketLink){
+
 }
+
+
+
+

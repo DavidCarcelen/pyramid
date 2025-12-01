@@ -24,7 +24,7 @@ public class TeamUtils {
     }
 
     public void checkIfPlayerIsMember(Player player, Team team) {
-        if (player.getTeam().equals(team)) {
+        if (!player.getTeam().equals(team)) {
             throw new InvalidTeamOperationException("Player is not member of the team.");
         }
 
