@@ -16,13 +16,51 @@ TRUNCATE TABLE registration, tournament, stores, players RESTART IDENTITY CASCAD
 -- ===========================================
 
 -- STORES
-INSERT INTO stores (id, email, password, nickname, address)
+INSERT INTO stores (
+    id, email, password, nickname, profile_picture,
+    address_country, address_city, address_google_maps_link,
+    store_capacity, card_market_link
+)
 VALUES
-    ('7b6f44b5-9c28-4a45-bc26-67c2f5d43101', 'serpi@pyramid.com', '$2a$10$cfE8wx3qQdPTyjS2kobuL.HU16QLvIfCnJ39TiOTqfpfxamuYTTr2', 'Serpi', 'ali bei'),
-    ('9b1a37ef-4b7a-4125-b589-94c79bdbbb02', 'pasku@pyramid.com', '$2a$10$cfE8wx3qQdPTyjS2kobuL.HU16QLvIfCnJ39TiOTqfpfxamuYTTr2', 'Pasku', 'industria'),
-    ('de4e8a9c-0463-4c7e-b5a7-589d08c15a03', 'hamelin@pyramid.com', '$2a$10$cfE8wx3qQdPTyjS2kobuL.HU16QLvIfCnJ39TiOTqfpfxamuYTTr2', 'Hamelin', 'mataro'),
-    ('f8e3d67a-918c-45a8-8bbf-82d1d0d45c04', 'elnucli@pyramid.com', '$2a$10$cfE8wx3qQdPTyjS2kobuL.HU16QLvIfCnJ39TiOTqfpfxamuYTTr2', 'ElNucli', 'sants'),
-    ('c1a92c11-63d2-4e76-9fdc-c0d82e4dcf05', 'magicbcn@pyramid.com', '$2a$10$cfE8wx3qQdPTyjS2kobuL.HU16QLvIfCnJ39TiOTqfpfxamuYTTr2', 'MagicBCN', 'ronda sant Pau');
+    ('7b6f44b5-9c28-4a45-bc26-67c2f5d43101',
+     'serpi@pyramid.com',
+     '$2a$10$cfE8wx3qQdPTyjS2kobuL.HU16QLvIfCnJ39TiOTqfpfxamuYTTr2',
+     'Serpi',
+     NULL,
+     'Spain', 'Barcelona', 'googleLink',
+     99, 'mkm'),
+
+    ('9b1a37ef-4b7a-4125-b589-94c79bdbbb02',
+     'pasku@pyramid.com',
+     '$2a$10$cfE8wx3qQdPTyjS2kobuL.HU16QLvIfCnJ39TiOTqfpfxamuYTTr2',
+     'Pasku',
+     NULL,
+     'Spain', 'Barcelona', 'MAPS',
+     28, 'cardmarkt'),
+
+    ('de4e8a9c-0463-4c7e-b5a7-589d08c15a03',
+     'hamelin@pyramid.com',
+     '$2a$10$cfE8wx3qQdPTyjS2kobuL.HU16QLvIfCnJ39TiOTqfpfxamuYTTr2',
+     'Hamelin',
+     NULL,
+     'Spain', 'Mataró', 'googleLink',
+     60, 'cardMarkt'),
+
+    ('f8e3d67a-918c-45a8-8bbf-82d1d0d45c04',
+     'elnucli@pyramid.com',
+     '$2a$10$cfE8wx3qQdPTyjS2kobuL.HU16QLvIfCnJ39TiOTqfpfxamuYTTr2',
+     'ElNucli',
+     NULL,
+     'Spain', 'Barcelona', 'maps',
+     60, ''),
+
+    ('c1a92c11-63d2-4e76-9fdc-c0d82e4dcf05',
+     'magicbcn@pyramid.com',
+     '$2a$10$cfE8wx3qQdPTyjS2kobuL.HU16QLvIfCnJ39TiOTqfpfxamuYTTr2',
+     'MagicBCN',
+     NULL,
+     'Spain', 'Barcelona', 'maPs',
+     50, 'theBiggestStore');
 
 -- PLAYERS
 
