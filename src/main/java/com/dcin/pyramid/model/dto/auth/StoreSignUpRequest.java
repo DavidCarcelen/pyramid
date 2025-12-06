@@ -1,6 +1,7 @@
 package com.dcin.pyramid.model.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record StoreSignUpRequest(
         @NotBlank(message = "Email required")
@@ -14,7 +15,7 @@ public record StoreSignUpRequest(
         @NotBlank(message = "City is required")
         String city,
         String googleMapsLink,
-        @NotBlank(message = "Store capacity is required")
+        @NotNull(message = "Store capacity is required")
         int storeCapacity,
         String cardMarketLink){
 
