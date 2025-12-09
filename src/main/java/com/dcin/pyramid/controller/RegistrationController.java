@@ -21,7 +21,7 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping("/{tournamentId}")
-    public ResponseEntity<RegistrationsResponse> newRegistration(@AuthenticationPrincipal Player player,
+    public ResponseEntity<RegistrationsResponse> newRegistration(@AuthenticationPrincipal Player player,// store?
                                                                  @PathVariable UUID tournamentId) {
         return ResponseEntity.ok(registrationService.handleRegistration(player, tournamentId));
     }

@@ -12,7 +12,7 @@ public class RegistrationMapper {
                 registration.getPlayer().getNickname(),
                 registration.getPlayer().getTeam().getTeamEmoji(),
                 registration.isReserveList(),
-                registration.getRegisteredAt()
+                registration.getRegisterDate()
         );
     }
 }

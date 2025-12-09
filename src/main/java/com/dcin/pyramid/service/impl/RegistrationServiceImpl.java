@@ -96,7 +96,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (firstReserve.isPresent()) {
             Registration promoted = firstReserve.get();
             promoted.setReserveList(false);
-            promoted.setRegisteredAt(LocalDateTime.now());
+            promoted.setRegisterDate(LocalDateTime.now());
             registrationRepository.save(promoted);
             promotion = true;
         } else {
