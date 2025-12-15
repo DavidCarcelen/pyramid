@@ -8,6 +8,8 @@ import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.service.TournamentService;
 import com.dcin.pyramid.service.impl.TournamentRegistrationCoordinator;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,8 @@ import java.util.UUID;
 @RequestMapping("/pyramid/store/tournaments")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('STORE')")
+@SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Store", description = "Tournament-related operations")
 public class TournamentController {
     private final TournamentService tournamentService;
     private final TournamentRegistrationCoordinator tournamentRegistrationCoordinator;

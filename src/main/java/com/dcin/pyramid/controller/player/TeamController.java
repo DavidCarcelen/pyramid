@@ -5,6 +5,8 @@ import com.dcin.pyramid.model.dto.TeamRequest;
 import com.dcin.pyramid.model.entity.Player;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.service.TeamService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +19,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/pyramid/player/teams")
 @PreAuthorize("hasRole('PLAYER')")
+@SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Player", description = "Team-related operations")
 public class TeamController {
     private final TeamService teamService;
 

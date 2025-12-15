@@ -6,6 +6,8 @@ import com.dcin.pyramid.model.dto.user.StoreDTO;
 import com.dcin.pyramid.model.dto.user.UpdateStoreRequest;
 import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.service.StoreService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/pyramid/store")
 @PreAuthorize("hasRole('STORE')")
+@SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Store", description = "Store-related operations")
 public class StoreController {
     private final StoreService storeService;
 

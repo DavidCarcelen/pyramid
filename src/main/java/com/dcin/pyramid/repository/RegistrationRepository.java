@@ -21,7 +21,7 @@ public interface RegistrationRepository extends JpaRepository<Registration, UUID
     @Query("SELECT COUNT(r) FROM Registration r WHERE r.tournament.id = :tournamentId AND r.reserveList = :isReserveList")
     int countPlayersByTournamentIdAndReserveList(UUID tournamentId, boolean isReserveList);
 
-    Optional<Registration> findFirstByTournamentIdAndReserveListTrueOrderByRegisteredAtAsc(UUID tournamentId);
+    Optional<Registration> findFirstByTournamentIdAndReserveListTrueOrderByDateAsc(UUID tournamentId);
 
     @Query("""
     SELECT new com.dcin.pyramid.model.dto.registration.RegistrationInfoDTO(
@@ -29,13 +29,13 @@ public interface RegistrationRepository extends JpaRepository<Registration, UUID
         p.nickname,
         t.teamEmoji,
         r.reserveList,
-        r.registeredAt
+        r.date
     )
     FROM Registration r
     JOIN r.player p
     LEFT JOIN p.team t
     WHERE r.tournament.id = :tournamentId
-    ORDER BY r.reserveList ASC, r.registeredAt ASC
+    ORDER BY r.reserveList ASC, r.date ASC
 """)
     List<RegistrationInfoDTO> findAllRegistrationsByTournamentIdOrdered(UUID tournamentId);
 

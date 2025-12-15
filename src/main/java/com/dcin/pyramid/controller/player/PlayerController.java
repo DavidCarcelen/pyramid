@@ -6,6 +6,8 @@ import com.dcin.pyramid.model.dto.user.PlayerDTO;
 import com.dcin.pyramid.model.dto.user.UpdatePlayerRequest;
 import com.dcin.pyramid.model.entity.Player;
 import com.dcin.pyramid.service.PlayerService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/pyramid/player")
 @PreAuthorize("hasRole('PLAYER')")
+@SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Player", description = "Player-related operations")
 public class PlayerController {
     private final PlayerService playerService;
 

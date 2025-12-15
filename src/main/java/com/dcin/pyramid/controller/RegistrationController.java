@@ -6,6 +6,8 @@ import com.dcin.pyramid.model.entity.Player;
 import com.dcin.pyramid.model.entity.Store;
 import com.dcin.pyramid.model.entity.User;
 import com.dcin.pyramid.service.RegistrationService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +19,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/pyramid/registrations")
+@SecurityRequirement(name = "bearerAuth")
 public class RegistrationController {
     private final RegistrationService registrationService;
 
