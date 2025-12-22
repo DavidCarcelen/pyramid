@@ -160,7 +160,7 @@ VALUES
          player_id,
          tournament_id,
          paid,
-         registered_at,
+         registration_time,
          reserve_list
      )
      VALUES

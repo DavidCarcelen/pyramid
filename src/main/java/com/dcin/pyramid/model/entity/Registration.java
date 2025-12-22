@@ -34,13 +34,13 @@ public class Registration {
     private Tournament tournament;
 
     private boolean paid;
-    private LocalDateTime date;
+    private LocalDateTime registrationTime;
     private boolean reserveList;
 
     @PrePersist
     public void prePersist() {
-        if (date == null) {
-            date = LocalDateTime.now();
+        if (registrationTime == null) {
+            registrationTime = LocalDateTime.now();
         }
     }
 }

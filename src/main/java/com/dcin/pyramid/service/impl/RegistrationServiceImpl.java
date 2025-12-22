@@ -92,11 +92,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public boolean promotePlayerRegistration(UUID tournamentId) {
         boolean promotion;
-        Optional<Registration> firstReserve = registrationRepository.findFirstByTournamentIdAndReserveListTrueOrderByDateAsc(tournamentId);
+        Optional<Registration> firstReserve = registrationRepository.findFirstByTournamentIdAndReserveListTrueOrderByRegistrationTimeAsc(tournamentId);
         if (firstReserve.isPresent()) {
             Registration promoted = firstReserve.get();
             promoted.setReserveList(false);
-            promoted.setDate(LocalDateTime.now());
+            promoted.setRegistrationTime(LocalDateTime.now());
             registrationRepository.save(promoted);
             promotion = true;
         } else {
