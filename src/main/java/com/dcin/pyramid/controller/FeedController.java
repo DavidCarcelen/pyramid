@@ -20,7 +20,7 @@ public class FeedController {
     }
 
     @GetMapping("/get-one-tournament/{tournamentId}")
-    public ResponseEntity<SingleTournamentResponse> getOneTournament(@PathVariable UUID tournamentId) {
+    public ResponseEntity<SingleTournamentResponse> getOneTournament(@PathVariable UUID tournamentId) {//only authenticated, get tournament info, get registered players
 
         return ResponseEntity.ok(tournamentService.getOneTournament(tournamentId));
     }

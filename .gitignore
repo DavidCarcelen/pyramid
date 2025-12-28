@@ -39,3 +39,6 @@ build/
 postgres_data/
 
 uploads/
+
+## VAR ##
+.env
