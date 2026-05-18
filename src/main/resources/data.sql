@@ -95,7 +95,7 @@ INSERT INTO tournament (
 VALUES
     ('11111111-aaaa-4aaa-baaa-aaaaaaaaaaaa',
      'Friday Night Magic - Pauper',
-     '2025-12-30T18:30:00',
+     '2026-12-30T18:30:00',
      4,
      'Pauper',
      'Classic Friday night event. 4 rounds. Prizes for top 4 players.',
@@ -109,7 +109,7 @@ VALUES
 
     ('22222222-bbbb-4bbb-bbbb-bbbbbbbbbbbb',
      'Saturday Commander Clash',
-     '2025-12-30T17:00:00',
+     '2026-12-30T17:00:00',
      24,
      'Commander',
      'Bring your best decks! Multiplayer pods, casual format.',
@@ -123,7 +123,7 @@ VALUES
 
     ('33333333-cccc-4ccc-bccc-cccccccccccc',
      'Modern Sunday Showdown',
-     '2025-12-30T11:00:00',
+     '2026-12-30T11:00:00',
      40,
      'Modern',
      'Competitive event. Swiss rounds + Top 8 cut. Store credit prizes.',
@@ -137,7 +137,7 @@ VALUES
 
     ('44444444-dddd-4ddd-bddd-dddddddddddd',
      'Legacy League Week 1',
-     '2025-10-30T18:00:00',
+     '2026-10-30T18:00:00',
      20,
      'Legacy',
      'First week of our monthly Legacy league. Entry includes a free drink.',
